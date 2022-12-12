@@ -5,5 +5,5 @@ Most of the code base will be written as rust workspace modules providing Actix 
 
 ## Service Architecture
 
-[`web`](./web/README.md) - The main web service that serves the base layer of the website and calls into all other
+[`web`](./web/) - The main web service that serves the base layer of the website and calls into all other
 modules. <br />
