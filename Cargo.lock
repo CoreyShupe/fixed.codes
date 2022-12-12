@@ -1356,9 +1356,12 @@ name = "web_commons"
 version = "0.1.0"
 dependencies = [
  "actix-files",
+ "actix-http",
  "actix-web",
  "anyhow",
  "log",
+ "mime",
+ "mime_guess",
 ]
 
 [[package]]
