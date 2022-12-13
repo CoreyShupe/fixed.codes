@@ -34,7 +34,7 @@ async fn main() -> anyhow::Result<()> {
             .configure(landing::configure_landing_page)
             .service(FileService::single_file(
                 "favicon.ico",
-                Path::new("favicon.ico"),
+                Path::new("resources/favicon.ico"),
             ))
     })
     .bind(("0.0.0.0", 8080))?
