@@ -45,6 +45,7 @@ jobs:
           # cache-from: type=gha
           # cache-to: type=gha,mode=max
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     name: Deploy web onto Kubernetes (develop)
     steps:
