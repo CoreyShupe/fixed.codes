@@ -8,6 +8,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/web
   K8S_INGRESS_NAME: fixed.codes
+  K8S_INGRESS_TLS_NAME: wildcard-fixed-codes-tls
   K8S_NAMESPACE: production
 
 jobs:
@@ -71,3 +72,4 @@ jobs:
           --set fullnameOverride=web \
           --set image.tag=dev-${GITHUB_SHA::7} \
           --set "ingress.enabled=true,ingress.hosts[0].host=${{ env.K8S_INGRESS_NAME }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific"
+          --set "ingress.tls[0].secretName=${{ env.K8S_INGRESS_TLS_NAME }},ingress.tls[0].hosts[0]=${{ env.K8S_INGRESS_NAME }}"
