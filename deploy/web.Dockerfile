@@ -10,5 +10,6 @@ RUN chmod +x target/release/web
 
 FROM scratch
 COPY --from=builder /app_build/target/release/web /web
+COPY resources /resources
 
 CMD ["/web"]
