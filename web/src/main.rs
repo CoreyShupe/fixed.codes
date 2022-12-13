@@ -1,7 +1,7 @@
 mod landing;
 
 use actix_web::middleware::Logger;
-use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpServer};
 use log::LevelFilter;
 use std::fs;
 use std::path::Path;
