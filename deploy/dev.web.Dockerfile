@@ -9,6 +9,6 @@ RUN cargo build -p web
 RUN chmod +x target/debug/web
 
 FROM scratch
-COPY --from=builder target/debug/web /web
+COPY --from=builder /app_build/target/debug/web /web
 
 CMD ["/web"]

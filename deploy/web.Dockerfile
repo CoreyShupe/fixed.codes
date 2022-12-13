@@ -9,6 +9,6 @@ RUN cargo build -p web --release
 RUN chmod +x target/release/web
 
 FROM scratch
-COPY --from=builder target/release/web /web
+COPY --from=builder /app_build/target/release/web /web
 
 CMD ["/web"]
