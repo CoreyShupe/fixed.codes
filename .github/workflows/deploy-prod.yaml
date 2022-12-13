@@ -38,7 +38,7 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          file: "{context}/deploy/web.Dockerfile"
+          file: "./deploy/web.Dockerfile"
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
