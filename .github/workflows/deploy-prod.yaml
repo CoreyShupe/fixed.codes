@@ -65,7 +65,7 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_K8S_CLUSTER }}
       - name: Helm install onto cluster
         run: |-
-          helm upgrade --install --atomic web deploy/charts/web \
+          helm upgrade --install --atomic --wait --timeout 120s --create-namespace web deploy/charts/web \
           --namespace ${{ env.K8S_NAMESPACE }} \
           --set fullnameOverride=web \
           --set image.tag=dev-${GITHUB_SHA::7} \
