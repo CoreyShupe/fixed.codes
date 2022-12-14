@@ -37,8 +37,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest,enable=true
-            type=sha,enable=true,format=short,prefix=,suffix=
+            type=sha,enable=true,format=short,prefix=prd-,suffix=
       - name: Build and push image
         uses: docker/build-push-action@v3
         with:
@@ -75,6 +74,6 @@ jobs:
           helm upgrade --install --atomic --wait --timeout 120s --create-namespace web deploy/charts/web \
           --namespace ${{ env.K8S_NAMESPACE }} \
           --set fullnameOverride=web \
-          --set image.tag=${GITHUB_SHA::7} \
+          --set image.tag=prd-${GITHUB_SHA::7} \
           --set "ingress.enabled=true,ingress.hosts[0].host=${{ env.K8S_INGRESS_NAME }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
           --set "ingress.tls[0].secretName=${{ env.K8S_INGRESS_TLS_NAME }},ingress.tls[0].hosts[0]=${{ env.K8S_INGRESS_NAME }}"
