@@ -42,8 +42,6 @@ jobs:
           }
         ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Create Docker Image
         uses: ./.github/workflows/docker-build.yaml
         with:
