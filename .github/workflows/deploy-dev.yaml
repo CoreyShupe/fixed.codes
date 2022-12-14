@@ -1,3 +1,5 @@
+name: Build and deploy (develop)
+
 on:
   push:
     branches:
@@ -7,13 +9,16 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/web
+  K8S_INGRESS_NAME: dev.fixed.codes
+  K8S_INGRESS_TLS_NAME: wildcard-dev-fixed-codes-tls
+  K8S_NAMESPACE: develop
 
 jobs:
   build:
     permissions:
       contents: read
       packages: write
-    name: Build and deploy web (develop)
+    name: Build and push web image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,3 +47,30 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy web onto Kubernetes
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: latest
+          token: ${{ secrets.GITHUB_TOKEN }}
+        id: install
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_K8S_CLUSTER }}
+      - name: Helm install onto cluster
+        run: |-
+          helm upgrade --install --atomic --wait --timeout 120s --create-namespace web deploy/charts/web \
+          --namespace ${{ env.K8S_NAMESPACE }} \
+          --set fullnameOverride=web \
+          --set image.tag=dev-${GITHUB_SHA::7} \
+          --set "ingress.enabled=true,ingress.hosts[0].host=${{ env.K8S_INGRESS_NAME }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
+          --set "ingress.tls[0].secretName=${{ env.K8S_INGRESS_TLS_NAME }},ingress.tls[0].hosts[0]=${{ env.K8S_INGRESS_NAME }}"
