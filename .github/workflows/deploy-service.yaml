@@ -36,7 +36,6 @@ jobs:
   import_deploy_info:
     runs-on: ubuntu-latest
     name: Import Deploy Info
-    id: import_deploy_info
     outputs:
       deploy_info: ${{ steps.export-json.outputs.deploy_info }}
     steps:
