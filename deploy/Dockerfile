@@ -27,11 +27,14 @@ ARG APP_NAME
 
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
-RUN cp target/$BUILD_PATH/$APP_NAME /app/built
-RUN stat /app/built
 
 FROM scratch
-COPY --from=builder /app/built /app
+
+ARG BUILD_PROFILE
+ARG BUILD_PATH=$BUILD_PROFILE
+ARG APP_NAME
+
+COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app
 COPY resources /resources
 
 CMD ["/app"]
