@@ -1,3 +1,5 @@
+name: Build and deploy (develop)
+
 on:
   push:
     branches:
@@ -16,7 +18,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    name: Build and push web image (develop)
+    name: Build and push web image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,7 +50,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    name: Deploy web onto Kubernetes (develop)
+    name: Deploy web onto Kubernetes
     steps:
       - name: Checkout
         uses: actions/checkout@v2
