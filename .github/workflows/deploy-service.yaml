@@ -53,7 +53,7 @@ jobs:
       app-name: ${{ inputs.app-name }}
       tag-prefix: ${{ inputs.tag-prefix }}
   deploy_kube:
-    needs: [ import_deploy_info, build_docker ]
+    needs: [ build_docker ]
     name: Deploy Service to Kubernetes
     secrets: inherit
     uses: ./.github/workflows/deploy-kubernetes.yaml
