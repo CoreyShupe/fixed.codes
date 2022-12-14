@@ -31,7 +31,6 @@ on:
 jobs:
   build_deploy_matrix:
     name: Build and Deploy Service Matrix
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         app: [
@@ -41,20 +40,13 @@ jobs:
             chart: "web",
           }
         ]
-    steps: []
-#      - name: Create Docker Image
-#        uses: ./.github/workflows/docker-build.yaml
-#        with:
-#          build-path: ${{ inputs.build-path }}
-#          build-profile: ${{ inputs.build-profile }}
-#          app-name: ${{ matrix.app.name }}
-#          tag-prefix: ${{ inputs.tag-prefix }}
-#      - name: Deploy Service to Kubernetes
-#        uses: ./.github/workflows/deploy-kubernetes.yaml
-#        with:
-#          app-name: ${{ matrix.app.name }}
-#          helm-chart: ${{ matrix.app.chart }}
-#          tag-prefix: ${{ inputs.tag-prefix }}
-#          k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-#          k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
-#          k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
+    uses: ./.github/workflows/deploy-service.yaml
+    with:
+      build-path: ${{ inputs.build-path }}
+      build-profile: ${{ inputs.build-profile }}
+      app-name: ${{ matrix.app.name }}
+      helm-chart: ${{ matrix.app.chart }}
+      tag-prefix: ${{ inputs.tag-prefix }}
+      k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
+      k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
+      k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
