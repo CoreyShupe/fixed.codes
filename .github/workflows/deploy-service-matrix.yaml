@@ -30,7 +30,6 @@ on:
 
 jobs:
   build_deploy_matrix:
-    needs: [ import_matrix_info ]
     name: Build and Deploy Service Matrix
     secrets: inherit
     strategy:

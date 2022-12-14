@@ -43,7 +43,6 @@ on:
 
 jobs:
   build_docker:
-    needs: [ import_deploy_info ]
     name: Build and Push Docker Image
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
