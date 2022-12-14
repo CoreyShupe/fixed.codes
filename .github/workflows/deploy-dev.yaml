@@ -43,7 +43,10 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          file: "./deploy/dev.web.Dockerfile"
+          file: "./deploy/dev.Dockerfile"
+          build-args: |
+            BUILD_PROFILE=debug
+            APP_NAME=web
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

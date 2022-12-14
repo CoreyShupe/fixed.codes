@@ -12,15 +12,21 @@ RUN apk add --update --no-cache alpine-sdk
 
 COPY --from=planner /app/recipe.json recipe.json
 
-RUN cargo chef cook --recipe-path recipe.json
+ARG BUILD_PROFILE
+
+RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
 
 COPY . .
 
-RUN cargo build -p web
-RUN chmod +x target/debug/web
+ARG APP_NAME
+
+RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
+RUN chmod +x target/$BUILD_PROFILE/$APP_NAME
 
 FROM scratch
-COPY --from=builder /app/target/debug/web /web
+ARG BUILD_PROFILE
+ARG APP_NAME
+COPY --from=builder /app/target/$BUILD_PROFILE/$APP_NAME /app
 COPY resources /resources
 
-CMD ["/web"]
+CMD ["/app"]
