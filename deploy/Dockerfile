@@ -1,4 +1,11 @@
-FROM lukemathwalker/cargo-chef:0.1.50-rust-1.65 AS chef
+FROM rust:1.65-alpine AS chef
+
+ARG CHEF_TAG=0.1.50
+
+RUN ((cat /etc/os-release | grep ID | grep alpine) && apk add --no-cache musl-dev || true) \
+    && cargo install cargo-chef --locked --version $CHEF_TAG \
+    && rm -rf $CARGO_HOME/registry/
+
 WORKDIR /app
 
 FROM chef AS planner
@@ -20,14 +27,16 @@ ARG APP_NAME
 
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
+RUN cp target/$BUILD_PATH/$APP_NAME /app/built
+RUN stat /app/built
 
-RUN echo $BUILD_PROFILE $APP_NAME $BUILD_PATH
+#RUN echo $BUILD_PROFILE $APP_NAME $BUILD_PATH
 
 FROM scratch
-ARG BUILD_PROFILE
-ARG BUILD_PATH=$BUILD_PROFILE
-ARG APP_NAME
-COPY --from=builder /app/target/debug/web /app
+#ARG BUILD_PROFILE
+#ARG BUILD_PATH=$BUILD_PROFILE
+#ARG APP_NAME
+COPY --from=builder /app/built /app
 COPY resources /resources
 
 CMD ["/app"]
