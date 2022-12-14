@@ -29,10 +29,9 @@ on:
         type: string
 
 jobs:
-  import_deploy_info:
+  import_matrix_info:
     runs-on: ubuntu-latest
     name: Import Matrix Info
-    id: import_matrix_info
     outputs:
       matrix_info: ${{ steps.export-json.outputs.matrix_info }}
     steps:
@@ -50,12 +49,12 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           echo "::set-output name=matrix_info::$content"
   build_deploy_matrix:
-    needs: [ "import_matrix_info" ]
+    needs: [ import_matrix_info ]
     name: Build and Deploy Service Matrix
     secrets: inherit
     strategy:
       matrix:
-        app: ${{ fromJson(jobs.import_matrix_info.matrix_info) }}
+        app: ${{ fromJson(needs.import_matrix_info.outputs.matrix_info) }}
     uses: ./.github/workflows/deploy-service.yaml
     with:
       build-path: ${{ inputs.build-path }}

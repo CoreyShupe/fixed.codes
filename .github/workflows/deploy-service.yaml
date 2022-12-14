@@ -59,7 +59,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
-      dockerfile: ${{ fromJson(steps.import_deploy_info.outputs.deploy_info).dockerfile }}
+      dockerfile: ${{ fromJson(needs.import_deploy_info.outputs.deploy_info).dockerfile }}
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
       app-name: ${{ inputs.app-name }}
@@ -71,8 +71,8 @@ jobs:
     uses: ./.github/workflows/deploy-kubernetes.yaml
     with:
       app-name: ${{ inputs.app-name }}
-      helm-chart: ${{ fromJson(jobs.import_deploy_info.deploy_info).chart }}
+      helm-chart: ${{ fromJson(needs.import_deploy_info.outputs.deploy_info).chart }}
       tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-      k8s-ingress-name: ${{ fromJson(jobs.import_deploy_info.deploy_info).ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
+      k8s-ingress-name: ${{ fromJson(needs.import_deploy_info.outputs.deploy_info).ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
