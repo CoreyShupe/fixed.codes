@@ -39,6 +39,7 @@ on:
 jobs:
   build_docker:
     name: Build and Push Docker Image
+    secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
       build-path: ${{ inputs.build-path }}
@@ -48,6 +49,7 @@ jobs:
   deploy_kube:
     needs: [ build_docker ]
     name: Deploy Service to Kubernetes
+    secrets: inherit
     uses: ./.github/workflows/deploy-kubernetes.yaml
     with:
       app-name: ${{ inputs.app-name }}

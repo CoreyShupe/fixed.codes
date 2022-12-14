@@ -10,6 +10,7 @@ jobs:
   deploy:
     name: Deploy Development Service Matrix
     uses: ./.github/workflows/deploy-service-matrix.yaml
+    secrets: inherit
     with:
       build-path: "debug"
       build-profile: "dev"

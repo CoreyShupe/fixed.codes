@@ -10,6 +10,7 @@ jobs:
   deploy:
     name: Deploy Production Service Matrix
     uses: ./.github/workflows/deploy-service-matrix.yaml
+    secrets: inherit
     with:
       build-path: "release"
       build-profile: "release"
