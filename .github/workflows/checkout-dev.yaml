@@ -9,6 +9,7 @@ on:
 jobs:
   deploy:
     name: Deploy Service Matrix
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy Service Matrix
         uses: ./.github/workflows/deploy-service-matrix.yaml
