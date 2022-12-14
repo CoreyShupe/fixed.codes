@@ -1,0 +1,21 @@
+name: Delete old container images
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  clean-ghcr:
+    name: Delete old unused container images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old images
+        uses: snok/container-retention-policy@v1
+        with:
+          image-names: "fixed.codes/*"
+          cut-off: 1 day ago UTC
+          keep-at-least: 3
+          account-type: personal
+          filter-tags: "dev-*"
+          token: ${{ secrets.PAT }}
