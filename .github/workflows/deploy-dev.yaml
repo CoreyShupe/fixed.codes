@@ -46,6 +46,7 @@ jobs:
           file: "./deploy/Dockerfile"
           build-args: |
             BUILD_PROFILE=dev
+            BUILD_PATH=debug
             APP_NAME=web
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
