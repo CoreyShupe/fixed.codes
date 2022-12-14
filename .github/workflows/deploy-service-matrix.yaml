@@ -1,0 +1,59 @@
+name: Build and Deploy Service Matrix
+
+on:
+  workflow_call:
+    inputs:
+      build-path:
+        description: "Maps to the docker file BUILD_PATH argument"
+        required: true
+        type: string
+      build-profile:
+        description: "Maps to the docker file BUILD_PROFILE argument"
+        required: true
+        type: string
+      k8s-deployment-ns:
+        description: "Kubernetes deployment namespace"
+        required: true
+        type: string
+      k8s-ingress-suffix:
+        description: "Kubernetes ingress suffix"
+        required: true
+        type: string
+      k8s-ingress-tls-name:
+        description: "Kubernetes ingress TLS name"
+        required: true
+        type: string
+      tag-prefix:
+        description: "Prefix used for docker image tag"
+        required: true
+        type: string
+
+jobs:
+  build_deploy_matrix:
+    name: Build and Deploy Service Matrix
+    strategy:
+      matrix:
+        app: [
+          {
+            name: "web",
+            ingress-prefix: "",
+            chart: "web",
+          }
+        ]
+    steps:
+      - name: Create Docker Image
+        uses: ./.github/workflows/docker-build.yaml
+        with:
+          build-path: ${{ inputs.build-path }}
+          build-profile: ${{ inputs.build-profile }}
+          app-name: ${{ matrix.app.name }}
+          tag-prefix: ${{ inputs.tag-prefix }}
+      - name: Deploy Service to Kubernetes
+        uses: ./.github/workflows/deploy-kubernetes.yaml
+        with:
+          app-name: ${{ matrix.app.name }}
+          helm-chart: ${{ matrix.app.chart }}
+          tag-prefix: ${{ inputs.tag-prefix }}
+          k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
+          k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
+          k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}

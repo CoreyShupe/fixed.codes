@@ -1,0 +1,21 @@
+name: Checkout Develop
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Service Matrix
+    steps:
+      - name: Deploy Service Matrix
+        uses: ./.github/workflows/deploy-service-matrix.yaml
+        with:
+          build-path: "debug"
+          build-profile: "dev"
+          k8s-deployment-ns: "develop"
+          k8s-ingress-suffix: "dev.fixed.codes"
+          k8s-ingress-tls-name: "wildcard-dev-fixed-codes-tls"
+          tag-prefix: "dev-"

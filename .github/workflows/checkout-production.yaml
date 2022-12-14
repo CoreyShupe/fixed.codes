@@ -1,0 +1,21 @@
+name: Checkout Production
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Service Matrix
+    steps:
+      - name: Deploy Service Matrix
+        uses: ./.github/workflows/deploy-service-matrix.yaml
+        with:
+          build-path: "release"
+          build-profile: "release"
+          k8s-deployment-ns: "production"
+          k8s-ingress-suffix: "fixed.codes"
+          k8s-ingress-tls-name: "wildcard-fixed-codes-tls"
+          tag-prefix: "prd-"

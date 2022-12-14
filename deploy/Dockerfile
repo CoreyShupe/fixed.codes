@@ -28,7 +28,6 @@ ARG APP_NAME
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
-
 COPY resources/$APP_NAME /resources
 RUN ls /resources
 RUN ls /resources/landing
