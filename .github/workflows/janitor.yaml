@@ -13,7 +13,7 @@ jobs:
       - name: Delete old images
         uses: snok/container-retention-policy@v1
         with:
-          image-names: "*"
+          image-names: "fixed.codes/*"
           cut-off: 1 day ago UTC
           keep-at-least: 3
           account-type: personal
