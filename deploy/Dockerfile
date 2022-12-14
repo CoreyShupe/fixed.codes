@@ -6,7 +6,6 @@ COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
-RUN apk add --update --no-cache alpine-sdk
 
 COPY --from=planner /app/recipe.json recipe.json
 
