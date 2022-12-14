@@ -35,6 +35,6 @@ ARG BUILD_PATH=$BUILD_PROFILE
 ARG APP_NAME
 
 COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app
-COPY resources /resources
+COPY resources/$APP_NAME /resources
 
 CMD ["/app"]

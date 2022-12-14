@@ -13,7 +13,7 @@ pub fn configure_landing_page(service: &mut ServiceConfig) {
                 Path::new("resources/landing/landing.html"),
                 ContentType(web_commons::mime::TEXT_HTML),
             )
-            .insert_bundle(FileBundle::construct(Path::new("resources/landing")))
+            .insert_bundle(FileBundle::construct(Path::new("../../resources/web/landing")))
             .expect("Failed to load file bundle on path resources/landing")
             .into_inner(),
     );
