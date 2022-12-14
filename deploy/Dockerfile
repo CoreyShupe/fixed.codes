@@ -25,7 +25,7 @@ FROM scratch
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
 ARG APP_NAME
-COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app_bin
+COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /$APP_NAME
 COPY resources /resources
 
-CMD ["/app_bin"]
+CMD ["$APP_NAME"]
