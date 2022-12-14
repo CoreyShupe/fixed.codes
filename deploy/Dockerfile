@@ -28,13 +28,33 @@ ARG APP_NAME
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
-FROM scratch
+
+COPY resources/$APP_NAME /resources
+RUN ls /resources
+RUN ls /resources/landing
+
+FROM alpine
+
+RUN apk add --update \
+    su-exec \
+    tini \
+    curl \
+    vim \
+    openssl \
+    bash
+
+RUN adduser -D app -s /sbin/nologin
+
+WORKDIR /app
 
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
 ARG APP_NAME
 
-COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app
-COPY resources/$APP_NAME /resources
+COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app/executable
+COPY resources/$APP_NAME /app/resources
 
-CMD ["/app"]
+RUN chown -R app:app /app/
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["su-exec", "app", "/app/executable"]
