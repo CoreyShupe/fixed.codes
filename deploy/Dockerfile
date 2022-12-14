@@ -1,7 +1,5 @@
-FROM rust:1.65-alpine AS chef
-RUN apk add --update --no-cache alpine-sdk
-RUN cargo install cargo-chef
-WORKDIR app
+FROM lukemathwalker/cargo-chef:0.1.50-rust-1.65 AS chef
+WORKDIR /app
 
 FROM chef AS planner
 COPY . .
