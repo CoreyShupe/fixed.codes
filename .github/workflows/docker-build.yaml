@@ -56,9 +56,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           file: "./deploy/Dockerfile"
           build-args: |
-            BUILD_PROFILE=${{ inputs.build_profile }}
-            BUILD_PATH=${{ inputs.build_path }}
-            APP_NAME=${{ inputs.app_name }}
+            BUILD_PROFILE=${{ inputs.build-profile }}
+            BUILD_PATH=${{ inputs.build-path }}
+            APP_NAME=${{ inputs.app-name }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
