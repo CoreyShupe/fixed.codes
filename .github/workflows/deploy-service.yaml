@@ -34,6 +34,7 @@ on:
 
 jobs:
   import_deploy_info:
+    runs-on: ubuntu-latest
     name: Import Deploy Info
     id: import_deploy_info
     outputs:
