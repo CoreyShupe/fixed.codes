@@ -38,8 +38,8 @@ jobs:
       - name: Export Deploy Json
         id: export-json
         run: |
-          ls -la
-          content=`cat ./apps.json`
+          ls ${GITHUB_WORKSPACE} -la
+          content=`cat ${GITHUB_WORKSPACE}/apps.json`
           content="${content//'%'/'%25'}"
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
