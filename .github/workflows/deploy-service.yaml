@@ -15,6 +15,15 @@ on:
         description: "The app's name."
         required: true
         type: string
+      helm-chart:
+        description: "The helm chart's name."
+        required: true
+        type: string
+      dockerfile:
+        description: "The dockerfile to use."
+        required: false
+        type: string
+        default: "Dockerfile"
       tag-prefix:
         description: "Prefix used for docker image tag."
         required: true
@@ -23,8 +32,8 @@ on:
         description: "Kubernetes deployment namespace"
         required: true
         type: string
-      k8s-ingress-suffix:
-        description: "Kubernetes ingress suffix"
+      k8s-ingress-name:
+        description: "Kubernetes ingress name"
         required: true
         type: string
       k8s-ingress-tls-name:
@@ -33,28 +42,13 @@ on:
         type: string
 
 jobs:
-  import_deploy_info:
-    runs-on: ubuntu-latest
-    name: Import Deploy Info
-    outputs:
-      deploy_info: ${{ steps.export-json.outputs.deploy_info }}
-    steps:
-      - name: Export Deploy Json
-        id: export-json
-        run: |
-          ls ${GITHUB_WORKSPACE} -la
-          content=`cat ${GITHUB_WORKSPACE}/${{ inputs.app-name }}/deploy_info.json`
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          echo "::set-output name=deploy_info::$content"
   build_docker:
     needs: [ import_deploy_info ]
     name: Build and Push Docker Image
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
-      dockerfile: ${{ fromJson(needs.import_deploy_info.outputs.deploy_info).dockerfile }}
+      dockerfile: ${{ inputs.dockerfile }}
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
       app-name: ${{ inputs.app-name }}
@@ -66,8 +60,8 @@ jobs:
     uses: ./.github/workflows/deploy-kubernetes.yaml
     with:
       app-name: ${{ inputs.app-name }}
-      helm-chart: ${{ fromJson(needs.import_deploy_info.outputs.deploy_info).chart }}
+      helm-chart: ${{ inputs.helm-chart }}
       tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-      k8s-ingress-name: ${{ fromJson(needs.import_deploy_info.outputs.deploy_info).ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
+      k8s-ingress-name: ${{ inputs.k8s-ingress-name }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}

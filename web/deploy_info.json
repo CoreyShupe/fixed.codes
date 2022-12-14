@@ -1,5 +1,0 @@
-{
-  "ingress-prefix": "",
-  "chart": "web",
-  "dockerfile": "trunk.Dockerfile"
-}

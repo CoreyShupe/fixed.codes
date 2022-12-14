@@ -28,35 +28,29 @@ on:
         required: true
         type: string
 
+env:
+  SERVICE_MATRIX:
+    - app-name: "web"
+      helm-chart: "web"
+      dockerfile: "trunk.Dockerfile"
+      ingress-prefix: ""
+
 jobs:
-  import_matrix_info:
-    runs-on: ubuntu-latest
-    name: Import Matrix Info
-    outputs:
-      matrix_info: ${{ steps.export-json.outputs.matrix_info }}
-    steps:
-      - name: Export Deploy Json
-        id: export-json
-        run: |
-          ls ${GITHUB_WORKSPACE} -la
-          content=`cat ${GITHUB_WORKSPACE}/apps.json`
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          echo "::set-output name=matrix_info::$content"
   build_deploy_matrix:
     needs: [ import_matrix_info ]
     name: Build and Deploy Service Matrix
     secrets: inherit
     strategy:
       matrix:
-        app: ${{ fromJson(needs.import_matrix_info.outputs.matrix_info) }}
+        app: ${{ env.SERVICE_MATRIX }}
     uses: ./.github/workflows/deploy-service.yaml
     with:
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
-      app-name: ${{ matrix.app }}
+      app-name: ${{ matrix.app-name }}
+      helm-chart: ${{ matrix.helm-chart }}
+      dockerfile: ${{ matrix.dockerfile }}
       tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-      k8s-ingress-suffix: ${{ inputs.k8s-ingress-suffix }}
+      k8s-ingress-name: ${{ matrix.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
