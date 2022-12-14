@@ -18,4 +18,4 @@ jobs:
           keep-at-least: 3
           account-type: personal
           filter-tags: "dev-*"
-          token: ${{ secrets.GITHUB_PAT }}
+          token: ${{ secrets.PAT }}
