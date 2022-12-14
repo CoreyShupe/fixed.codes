@@ -28,13 +28,6 @@ on:
         required: true
         type: string
 
-env:
-  SERVICE_MATRIX:
-    - app-name: "web"
-      helm-chart: "web"
-      dockerfile: "trunk.Dockerfile"
-      ingress-prefix: ""
-
 jobs:
   build_deploy_matrix:
     needs: [ import_matrix_info ]
@@ -42,7 +35,11 @@ jobs:
     secrets: inherit
     strategy:
       matrix:
-        app: ${{ env.SERVICE_MATRIX }}
+        app:
+          - app-name: "web"
+            helm-chart: "web"
+            dockerfile: "trunk.Dockerfile"
+            ingress-prefix: ""
     uses: ./.github/workflows/deploy-service.yaml
     with:
       build-path: ${{ inputs.build-path }}
