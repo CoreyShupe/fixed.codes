@@ -30,12 +30,7 @@ RUN chmod +x target/$BUILD_PATH/$APP_NAME
 RUN cp target/$BUILD_PATH/$APP_NAME /app/built
 RUN stat /app/built
 
-#RUN echo $BUILD_PROFILE $APP_NAME $BUILD_PATH
-
 FROM scratch
-#ARG BUILD_PROFILE
-#ARG BUILD_PATH=$BUILD_PROFILE
-#ARG APP_NAME
 COPY --from=builder /app/built /app
 COPY resources /resources
 
