@@ -21,11 +21,13 @@ ARG APP_NAME
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
+RUN echo $BUILD_PROFILE $APP_NAME $BUILD_PATH
+
 FROM scratch
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
 ARG APP_NAME
-COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /$APP_NAME
+COPY --from=builder /app/target/debug/web /app
 COPY resources /resources
 
-CMD ["$APP_NAME"]
+CMD ["/app"]
