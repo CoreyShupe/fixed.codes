@@ -3,6 +3,11 @@ name: Build and Push Docker Image
 on:
   workflow_call:
     inputs:
+      dockerfile:
+        description: "The dockerfile to use."
+        required: false
+        type: string
+        default: "Dockerfile"
       build-path:
         description: "Maps to the docker file BUILD_PATH argument"
         required: true
@@ -54,7 +59,7 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          file: "./deploy/Dockerfile"
+          file: "./deploy/${{ inputs.dockerfile }}"
           build-args: |
             BUILD_PROFILE=${{ inputs.build-profile }}
             BUILD_PATH=${{ inputs.build-path }}

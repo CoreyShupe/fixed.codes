@@ -34,20 +34,13 @@ jobs:
     secrets: inherit
     strategy:
       matrix:
-        app: [
-          {
-            name: "web",
-            ingress-prefix: "",
-            chart: "web",
-          }
-        ]
+        app: ["web"]
     uses: ./.github/workflows/deploy-service.yaml
     with:
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
-      app-name: ${{ matrix.app.name }}
-      helm-chart: ${{ matrix.app.chart }}
+      app-name: ${{ matrix.app }}
       tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-      k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
+      k8s-ingress-suffix: ${{ inputs.k8s-ingress-suffix }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
