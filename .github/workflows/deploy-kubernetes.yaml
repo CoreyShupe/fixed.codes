@@ -53,7 +53,7 @@ jobs:
       - name: Helm install onto cluster
         run: |-
           helm upgrade --install --atomic --wait --timeout 120s --create-namespace ${{ inputs.app-name }} deploy/charts/${{ inputs.helm-chart }} \
-          --namespace ${{ inputs.k8s-deployment.ns }} \
+          --namespace ${{ inputs.k8s-deployment-ns }} \
           --set fullnameOverride=${{ inputs.app-name }} \
           --set image.repository=${{ env.IMAGE_REPOSITORY }}/${{ inputs.app-name }} \
           --set image.tag=${{ inputs.docker-tag-prefix }}${GITHUB_SHA::7} \
