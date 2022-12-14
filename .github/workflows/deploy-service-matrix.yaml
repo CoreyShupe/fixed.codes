@@ -43,10 +43,10 @@ jobs:
     with:
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
-      app-name: ${{ matrix.app-name }}
-      helm-chart: ${{ matrix.helm-chart }}
-      dockerfile: ${{ matrix.dockerfile }}
+      app-name: ${{ matrix.app.app-name }}
+      helm-chart: ${{ matrix.app.helm-chart }}
+      dockerfile: ${{ matrix.app.dockerfile }}
       tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-      k8s-ingress-name: ${{ matrix.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
+      k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
