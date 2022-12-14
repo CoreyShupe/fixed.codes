@@ -46,7 +46,7 @@ jobs:
       app-name: ${{ inputs.app-name }}
       tag-prefix: ${{ inputs.tag-prefix }}
   deploy_kube:
-    need: [ build_docker ]
+    needs: [ build_docker ]
     name: Deploy Service to Kubernetes
     uses: ./.github/workflows/deploy-kubernetes.yaml
     with:
