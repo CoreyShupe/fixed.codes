@@ -35,15 +35,11 @@ jobs:
     outputs:
       matrix_info: ${{ steps.export-json.outputs.matrix_info }}
     steps:
-      - name: Read In Deploy File
-        id: read-file
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./apps.json
       - name: Export Deploy Json
         id: export-json
         run: |
-          content=$(echo ${{ steps.read-file.outputs.content }})
+          ls -la
+          content=`cat ./apps.json`
           content="${content//'%'/'%25'}"
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
