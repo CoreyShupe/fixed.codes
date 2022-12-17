@@ -32,7 +32,7 @@ COPY resources/$APP_NAME /resources
 RUN ls /resources
 RUN ls /resources/landing
 
-FROM alpine
+FROM alpine AS runtime
 
 RUN apk add --update \
     su-exec \
@@ -41,8 +41,6 @@ RUN apk add --update \
     vim \
     openssl \
     bash
-
-RUN adduser -D app -s /sbin/nologin
 
 WORKDIR /app
 
@@ -53,6 +51,7 @@ ARG APP_NAME
 COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app/executable
 COPY resources/$APP_NAME /app/resources
 
+RUN adduser -D app -s /sbin/nologin
 RUN chown -R app:app /app/
 
 ENTRYPOINT ["/sbin/tini", "--"]

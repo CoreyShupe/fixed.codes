@@ -18,16 +18,22 @@ COPY --from=planner /app/recipe.json recipe.json
 
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
+ARG APP_NAME
 
 RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
 
-COPY . .
+RUN rustup target add wasm32-unknown-unknown
+RUN cargo install --locked trunk
 
-ARG APP_NAME
+COPY $APP_NAME .
 
-RUN chmod +x target/$BUILD_PATH/$APP_NAME
+RUN if [ "$BUILD_PROFILE" = "release" ]; then \
+        trunk build --release; \
+    else \
+        trunk build; \
+    fi
 
-COPY resources/$APP_NAME /app/resources
+FROM nginx:alpine AS runtime
 
 RUN apk add --update \
     su-exec \
@@ -37,13 +43,13 @@ RUN apk add --update \
     openssl \
     bash
 
+WORKDIR /app
+COPY --from=builder /app/dist dist
+COPY --from=builder /app/nginx.conf /etc/nginx/nginx.conf
+
 RUN adduser -D app -s /sbin/nologin
-
-ARG BUILD_PROFILE
-ARG BUILD_PATH=$BUILD_PROFILE
-ARG APP_NAME
-
 RUN chown -R app:app /app/
+RUN chown -R app:app /usr/local/cargo
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["su-exec", "app", "cargo", "trunk", "serve"]
+CMD ["su-exec", "app", "nginx"]

@@ -10,7 +10,7 @@ pub fn configure_landing_page(service: &mut ServiceConfig) {
         FileService::construct()
             .static_raw(
                 "/",
-                Path::new("resources/landing/landing.html"),
+                Path::new("resources/landing/index.html"),
                 ContentType(web_commons::mime::TEXT_HTML),
             )
             .insert_bundle(FileBundle::construct(Path::new("resources/landing")))
