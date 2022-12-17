@@ -4,11 +4,13 @@
     background-color: #231a1a;
 }
 
-.root_nav_item_container div + div {
+.root_nav_item_container div + div,
+.root_nav_content_container div + div {
     margin-left: 10px;
 }
 
-.root_nav_item_container div:not(:last-child) {
+.root_nav_item_container div:not(:last-child),
+.root_nav_content_container div:not(:last-child) {
     margin-right: 10px;
 }
 
@@ -30,4 +32,6 @@ div.active {
     line-height: 50px;
     color: white;
     text-decoration: none;
+    font-weight: bold;
+    font-size: large;
 }

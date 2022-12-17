@@ -1,19 +1,24 @@
-use super::common_lib::flex::*;
 use yew::html::ImplicitClone;
 use yew::{classes, function_component, html, Classes, Html, Properties};
 use yew_router::{prelude::Link, Routable};
+
+use super::common_lib::flex::*;
 
 pub trait Named {
     fn name(&self) -> &'static str;
 }
 
-#[derive(PartialEq, Clone, Debug)]
-pub enum ContentInfo {
-    ForeignLink(Box<ContentInfo>, String),
+#[derive(PartialEq)]
+pub enum ContentInfo<R>
+where
+    R: Routable + PartialEq + ImplicitClone + Named + 'static,
+{
+    Link(Box<ContentInfo<R>>, R),
+    ForeignLink(Box<ContentInfo<R>>, String),
     Image(String),
 }
 
-impl Into<Html> for &ContentInfo {
+impl<R: Routable + PartialEq + ImplicitClone + Named + 'static> Into<Html> for &ContentInfo<R> {
     fn into(self) -> Html {
         match self {
             ContentInfo::ForeignLink(info, link) => html! {
@@ -22,11 +27,18 @@ impl Into<Html> for &ContentInfo {
                 </a>
             },
             ContentInfo::Image(link) => html! { <img src={link.to_string()}/> },
+            ContentInfo::Link(content, link_out) => {
+                html! {
+                    <Link<R> to={link_out.clone()}>
+                        {Into::<Html>::into(content.as_ref())}
+                    </Link<R>>
+                }
+            }
         }
     }
 }
 
-impl Into<Html> for ContentInfo {
+impl<R: Routable + PartialEq + ImplicitClone + Named + 'static> Into<Html> for ContentInfo<R> {
     fn into(self) -> Html {
         Into::<Html>::into(&self)
     }
@@ -38,7 +50,7 @@ where
     E: Routable + PartialEq + ImplicitClone + Named + 'static,
 {
     #[prop_or_default]
-    pub extra_content: Vec<ContentInfo>,
+    pub extra_content: Vec<ContentInfo<E>>,
     #[prop_or_default]
     pub active_route: Option<E>,
     #[prop_or_default]
