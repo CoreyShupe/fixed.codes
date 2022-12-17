@@ -39,7 +39,16 @@ jobs:
             helm-chart: "web"
             dockerfile: "trunk.Dockerfile"
             ingress-prefix: ""
-    uses: ./.github/workflows/deploy-service.yaml
+            dependencies: |
+              - "web/**"
+          - app-name: "web-api"
+            helm-chart: "web"
+            dockerfile: "Dockerfile"
+            ingress-prefix: "api"
+            dependencies: |
+              - "web-api/**"
+              - "web_commons/**"
+    uses: ./local_workflows/deploy-service.yaml
     with:
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}

@@ -3,6 +3,10 @@ name: Build and Deploy Service
 on:
   workflow_call:
     inputs:
+      app:
+        description: "App matrix assignment"
+        required: true
+        type: object
       build-path:
         description: "Maps to the docker file BUILD_PATH argument"
         required: true
@@ -11,19 +15,6 @@ on:
         description: "Maps to the docker file BUILD_PROFILE argument"
         required: true
         type: string
-      app-name:
-        description: "The app's name."
-        required: true
-        type: string
-      helm-chart:
-        description: "The helm chart's name."
-        required: true
-        type: string
-      dockerfile:
-        description: "The dockerfile to use."
-        required: false
-        type: string
-        default: "Dockerfile"
       tag-prefix:
         description: "Prefix used for docker image tag."
         required: true
@@ -42,24 +33,32 @@ on:
         type: string
 
 jobs:
+  change_detector:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changed
+        with.filters.deps: ${{ inputs.app.dependencies }}
   build_docker:
+    needs: [ change_detector ]
+    if: ${{ needs.change_detector.outputs.deps == 'true' }}
     name: Build and Push Docker Image
     secrets: inherit
-    uses: ./.github/workflows/docker-build.yaml
+    uses: ./local_workflows/docker-build.yaml
     with:
-      dockerfile: ${{ inputs.dockerfile }}
+      dockerfile: ${{ inputs.app.dockerfile }}
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
-      app-name: ${{ inputs.app-name }}
+      app-name: ${{ inputs.app.app-name }}
       tag-prefix: ${{ inputs.tag-prefix }}
   deploy_kube:
     needs: [ build_docker ]
     name: Deploy Service to Kubernetes
     secrets: inherit
-    uses: ./.github/workflows/deploy-kubernetes.yaml
+    uses: ./local_workflows/deploy-kubernetes.yaml
     with:
-      app-name: ${{ inputs.app-name }}
-      helm-chart: ${{ inputs.helm-chart }}
+      app-name: ${{ inputs.app.app-name }}
+      helm-chart: ${{ inputs.app.helm-chart }}
       tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
       k8s-ingress-name: ${{ inputs.k8s-ingress-name }}

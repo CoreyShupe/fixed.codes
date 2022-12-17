@@ -12,7 +12,7 @@ RUN cargo install --locked trunk
 WORKDIR /app
 
 FROM chef AS planner
-COPY $APP_NAME .
+COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
@@ -25,7 +25,7 @@ ARG APP_NAME
 
 RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
 
-COPY $APP_NAME .
+COPY . .
 
 RUN if [ "$BUILD_PROFILE" = "release" ]; then \
         trunk build --release; \

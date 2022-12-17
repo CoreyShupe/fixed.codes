@@ -9,7 +9,7 @@ RUN ((cat /etc/os-release | grep ID | grep alpine) && apk add --no-cache musl-de
 WORKDIR /app
 
 FROM chef AS planner
-COPY $APP_NAME .
+COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
@@ -22,7 +22,7 @@ ARG BUILD_PATH=$BUILD_PROFILE
 
 RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
 
-COPY $APP_NAME .
+COPY . .
 
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME

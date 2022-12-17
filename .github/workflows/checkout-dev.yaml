@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    types:
+      - edited
+      - updated
+    branches:
+      - develop
   workflow_dispatch:
 
 jobs:
