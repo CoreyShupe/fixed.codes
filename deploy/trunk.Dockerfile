@@ -49,7 +49,6 @@ COPY --from=builder /app/nginx.conf /etc/nginx/nginx.conf
 
 RUN adduser -D app -s /sbin/nologin
 RUN chown -R app:app /app/
-RUN chown -R app:app /usr/local/cargo
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["su-exec", "app", "nginx"]
