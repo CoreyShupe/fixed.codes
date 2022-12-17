@@ -1,24 +1,6 @@
-use yew::prelude::*;
-
-#[function_component]
-fn App() -> Html {
-    let counter = use_state(|| 0);
-    let onclick = {
-        let counter = counter.clone();
-        move |_| {
-            let value = *counter + 2;
-            counter.set(value);
-        }
-    };
-
-    html! {
-        <div>
-            <button {onclick}>{ "+1" }</button>
-            <p>{ *counter }</p>
-        </div>
-    }
-}
+pub(crate) mod components;
+pub mod router;
 
 fn main() {
-    yew::Renderer::<App>::new().render();
+    yew::Renderer::<router::Root>::new().render();
 }
