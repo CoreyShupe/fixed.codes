@@ -41,6 +41,8 @@ fn nav_base(route: Routes) -> Html {
     html! {
         <NavBar<Routes>
             base_classes="root_navbar"
+            nav_item_classes="root_nav_item"
+            nav_item_container_classes="root_nav_item_container"
             active_route={route}
             included_routes={included_routes}
             extra_content={extra_content}

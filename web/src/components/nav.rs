@@ -69,8 +69,8 @@ where
         >
             <FlexBox
                 class={props.nav_item_container_classes.clone()}
-                justify_content={JustifyContent::SpaceBetween}
-                align_items={AlignItems::Start}
+                justify_content={JustifyContent::Center}
+                align_items={AlignItems::Center}
             >
                 {
                     for props.included_routes.iter().map(|route| {
@@ -83,13 +83,13 @@ where
                         } else {
                             props.nav_item_classes.clone()
                         };
+
                         html! {
-                            <Link<E>
-                                classes={nav_item_classes}
-                                to={route.clone()}
-                            >
-                                {route.name()}
-                            </Link<E>>
+                            <div class={nav_item_classes}>
+                                <Link<E> to={route.clone()} >
+                                    {route.name()}
+                                </Link<E>>
+                            </div>
                         }
                     })
                 }
@@ -97,7 +97,7 @@ where
             <FlexBox
                 class={props.content_item_container_classes.clone()}
                 justify_content={JustifyContent::SpaceBetween}
-                align_items={AlignItems::End}
+                align_items={AlignItems::Center}
             >
                 {
                     for props.extra_content.iter().map(|content| {
