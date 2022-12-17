@@ -11,5 +11,10 @@ actix-http = "3.2.2"
 actix-web = "4.2.1"
 anyhow = "1.0.66"
 log = "0.4.17"
-mime = "0.3.16"
-mime_guess = "2.0.4"
+chrono = "0.4.23"
+fern = "0.6.1"
+serde = { version = "1.0.151", optional = true }
+serde_derive = { version = "1.0.151", optional = true }
+
+[features]
+serde_support = ["serde", "serde_derive", "log/serde"]

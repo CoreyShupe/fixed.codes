@@ -9,26 +9,24 @@ RUN ((cat /etc/os-release | grep ID | grep alpine) && apk add --no-cache musl-de
 WORKDIR /app
 
 FROM chef AS planner
-COPY . .
+COPY $APP_NAME .
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
 
 COPY --from=planner /app/recipe.json recipe.json
 
+ARG APP_NAME
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
 
 RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
 
-COPY . .
-
-ARG APP_NAME
+COPY $APP_NAME .
 
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
-COPY resources/$APP_NAME /resources
 RUN ls /resources
 RUN ls /resources/landing
 
@@ -44,9 +42,9 @@ RUN apk add --update \
 
 WORKDIR /app
 
+ARG APP_NAME
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
-ARG APP_NAME
 
 COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app/executable
 COPY resources/$APP_NAME /app/resources
