@@ -34,16 +34,16 @@ jobs:
     secrets: inherit
     strategy:
       matrix:
-        app: # todo
+        app:
           - app-name: "web"
             helm-chart: "web"
-            dockerfile: "trunk.Dockerfile"
+            dockerfile: "nuxt.Dockerfile"
             ingress-prefix: ""
             dependencies: |
               - "web/**"
           - app-name: "web-api"
             helm-chart: "web"
-            dockerfile: "Dockerfile"
+            dockerfile: "rust.Dockerfile"
             ingress-prefix: "api"
             dependencies: |
               - "web-api/**"
