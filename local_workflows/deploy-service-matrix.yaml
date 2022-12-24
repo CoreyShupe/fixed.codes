@@ -34,7 +34,7 @@ jobs:
     secrets: inherit
     strategy:
       matrix:
-        app:
+        app: # todo
           - app-name: "web"
             helm-chart: "web"
             dockerfile: "trunk.Dockerfile"

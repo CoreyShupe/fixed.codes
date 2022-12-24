@@ -1,7 +1,6 @@
 [workspace]
 
 members = [
-    "web",
     "web-api",
     "web_commons"
 ]
