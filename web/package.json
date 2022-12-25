@@ -7,7 +7,6 @@
         "start": "nuxt start"
     },
     "dependencies": {
-        "@coreui/vue": "^4.5.0",
         "nuxt": "^3.0",
         "serve": "14.1.2"
     }
