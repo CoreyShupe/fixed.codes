@@ -276,6 +276,11 @@
   dependencies:
     mime "^3.0.0"
 
+"@coreui/vue@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@coreui/vue/-/vue-4.5.0.tgz#a9054d27ee39e794d85c7cda3e877d7c52ff5d55"
+  integrity sha512-D6vv04fJne1zIs4HAyDnsAbKWACvWm+a3N1dfpvUZ8hvi7MrjC4+WqOjVa3xcCFLHU5YkN5XIcZyw0lGmII6vw==
+
 "@esbuild/android-arm64@0.16.10":
   version "0.16.10"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.16.10.tgz#d784d8f13dbef50492ea55456fb50651e4036fbf"

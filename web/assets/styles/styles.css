@@ -1,0 +1,27 @@
+:root {
+    --background-color: #34495e;
+    --text-color: #e74c3c;
+    --lift-color: #2c3e50;
+    --light-border-color: #7f8c8d;
+    --border-accent-color: #8e44ad;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-optical-sizing: auto;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.content {
+    border-radius: 2px;
+    background-color: var(--lift-color);
+}
+
+.content:not(button), button.content:not(:hover) {
+    outline: 2px solid var(--light-border-color);
+}
+
+button.content:hover {
+    outline: 2px solid var(--border-accent-color);
+}

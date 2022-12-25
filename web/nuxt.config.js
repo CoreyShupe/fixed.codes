@@ -3,5 +3,8 @@ export default {
         dirs: [
             '~/components',
         ]
-    }
+    },
+    css: [
+        '@/assets/styles/styles.css'
+    ],
 }
