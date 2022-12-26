@@ -8,7 +8,7 @@ RUN apk add --update \
     openssl \
     bash
 
-ARG $APP_NAME
+ARG APP_NAME
 
 WORKDIR /app
 COPY $APP_NAME/package.json .
