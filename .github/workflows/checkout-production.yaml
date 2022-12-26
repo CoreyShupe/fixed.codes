@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Deploy Production Service Matrix
-    uses: ./local_workflows/deploy-service-matrix.yaml
+  build_and_deploy:
+    name: Deploy Development Service Matrix
     secrets: inherit
+    uses: ./.github/workflows/deploy-service-matrix.yaml
     with:
       build-path: "release"
       build-profile: "release"

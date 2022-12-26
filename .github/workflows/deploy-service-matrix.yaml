@@ -37,24 +37,27 @@ jobs:
         app:
           - app-name: "web"
             helm-chart: "web"
-            dockerfile: "nuxt.Dockerfile"
+            language: "nuxt"
             ingress-prefix: ""
             dependencies: |
-              - "web/**"
+              deps:
+                - "web/**"
           - app-name: "web-api"
             helm-chart: "web"
-            dockerfile: "rust.Dockerfile"
-            ingress-prefix: "api"
+            language: "rust"
+            ingress-prefix: "api."
             dependencies: |
-              - "web-api/**"
-              - "web_commons/**"
-    uses: ./local_workflows/deploy-service.yaml
+              deps:
+                - "web-api/**"
+                - "web_commons/**"
+    uses: "./.github/workflows/generic.yaml"
     with:
+      app-name: ${{ matrix.app.app-name }}
+      app-language: ${{ matrix.app.language }}
+      app-dependencies: ${{ matrix.app.dependencies }}
+      app-helm-chart: ${{ matrix.app.helm-chart }}
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
-      app-name: ${{ matrix.app.app-name }}
-      helm-chart: ${{ matrix.app.helm-chart }}
-      dockerfile: ${{ matrix.app.dockerfile }}
       tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
       k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}

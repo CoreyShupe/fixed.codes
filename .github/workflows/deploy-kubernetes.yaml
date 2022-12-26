@@ -11,7 +11,7 @@ on:
         description: "Helm chart name."
         required: true
         type: string
-      tag-prefix:
+      image-tag:
         description: "Prefix used for docker image tag."
         required: true
         type: string
@@ -37,7 +37,7 @@ jobs:
     name: Deploy to Kubernetes
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -56,6 +56,6 @@ jobs:
           --namespace ${{ inputs.k8s-deployment-ns }} \
           --set fullnameOverride=${{ inputs.app-name }} \
           --set image.repository=${{ env.IMAGE_REPOSITORY }}/${{ inputs.app-name }} \
-          --set image.tag=${{ inputs.tag-prefix }}${GITHUB_SHA::7} \
+          --set image.tag=${{ inputs.image-tag }} \
           --set "ingress.enabled=true,ingress.hosts[0].host=${{ inputs.k8s-ingress-name }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
           --set "ingress.tls[0].secretName=${{ inputs.k8s-ingress-tls-name }},ingress.tls[0].hosts[0]=${{ inputs.k8s-ingress-name }}"
