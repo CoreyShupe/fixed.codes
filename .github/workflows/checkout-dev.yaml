@@ -22,10 +22,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Deploy Service Matrix
         uses: ./github/actions/deploy-service-matrix.yaml
-          with:
-            build-path: "debug"
-            build-profile: "dev"
-            k8s-deployment-ns: "develop"
-            k8s-ingress-suffix: "dev.fixed.codes"
-            k8s-ingress-tls-name: "wildcard-dev-fixed-codes-tls"
-            tag-prefix: "dev-"
+        with:
+          build-path: "debug"
+          build-profile: "dev"
+          k8s-deployment-ns: "develop"
+          k8s-ingress-suffix: "dev.fixed.codes"
+          k8s-ingress-tls-name: "wildcard-dev-fixed-codes-tls"
+          tag-prefix: "dev-"
