@@ -37,7 +37,7 @@ jobs:
     name: Deploy to Kubernetes
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -50,12 +50,15 @@ jobs:
         id: install
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_K8S_CLUSTER }}
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Helm install onto cluster
         run: |-
           helm upgrade --install --atomic --wait --timeout 120s --create-namespace ${{ inputs.app-name }} deploy/charts/${{ inputs.helm-chart }} \
           --namespace ${{ inputs.k8s-deployment-ns }} \
           --set fullnameOverride=${{ inputs.app-name }} \
           --set image.repository=${{ env.IMAGE_REPOSITORY }}/${{ inputs.app-name }} \
-          --set image.tag=${{ inputs.image-tag-prefix }}${GITHUB_SHA::7} \
+          --set image.tag=${{ inputs.image-tag-prefix }}${{ steps.vars.outputs.sha_short }} \
           --set "ingress.enabled=true,ingress.hosts[0].host=${{ inputs.k8s-ingress-name }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
           --set "ingress.tls[0].secretName=${{ inputs.k8s-ingress-tls-name }},ingress.tls[0].hosts[0]=${{ inputs.k8s-ingress-name }}"
