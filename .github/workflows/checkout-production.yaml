@@ -9,16 +9,12 @@ on:
 jobs:
   build_and_deploy:
     name: Deploy Development Service Matrix
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout (v3)
-        uses: actions/checkout@v3
-      - name: Deploy Service Matrix
-        uses: ./github/actions/deploy-service-matrix.yaml
-        with:
-          build-path: "release"
-          build-profile: "release"
-          k8s-deployment-ns: "production"
-          k8s-ingress-suffix: "fixed.codes"
-          k8s-ingress-tls-name: "wildcard-fixed-codes-tls"
-          tag-prefix: "prd-"
+    secrets: inherit
+    uses: ./github/workflows/deploy-service-matrix.yaml
+    with:
+      build-path: "release"
+      build-profile: "release"
+      k8s-deployment-ns: "production"
+      k8s-ingress-suffix: "fixed.codes"
+      k8s-ingress-tls-name: "wildcard-fixed-codes-tls"
+      tag-prefix: "prd-"

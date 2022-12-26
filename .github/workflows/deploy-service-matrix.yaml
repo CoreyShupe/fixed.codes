@@ -8,7 +8,7 @@
 # along with different "build" profiles
 #
 # Each language used will have their own common "action" which will build that language
-# They will be under `.github/actions/arch/<language>.yaml`
+# They will be under `.github/workflows/<language>.yaml`
 # Each will take in a "app-name", "helm-chart", "ingress-prefix", "dependencies"
 # A service action will only be run if the path for `dependencies` has any changes
 
@@ -45,7 +45,7 @@ on:
 jobs:
   build_deploy_matrix:
     name: Build and Deploy Service Matrix
-    runs-on: ubuntu-latest
+    secrets: inherit
     strategy:
       matrix:
         app:
@@ -62,21 +62,12 @@ jobs:
             dependencies: |
               - "web-api/**"
               - "web_commons/**"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Dependency Change Detector
-        uses: dorny/paths-filter@v2
-        id: change-detector
-        with.filters.deps: ${{ inputs.app.dependencies }}
-      - name: Execute Language Based Deployment
-        needs: [change-detector]
-        if: ${{ steps.change-detector.outputs.deps == true }}
-        uses: ./github/actions/arch/${{matrix.app.language}}.yaml
-        with:
-          app: ${{ matrix.app }}
-          build-path: ${{ inputs.build-path }}
-          k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-          k8s-ingress-suffix: ${{ inputs.k8s-ingress-suffix }}
-          k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
-          tag-prefix: ${{ inputs.tag-prefix }}
+    uses: ./.github/workflows/${{ matrix.language }}.yaml
+    with:
+      app: ${{ matrix.app }}
+      build-path: ${{ inputs.build-path }}
+      build-profile: ${{ inputs.build-profile }}
+      tag-prefix: ${{ inputs.tag-prefix }}
+      k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
+      k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
+      k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
