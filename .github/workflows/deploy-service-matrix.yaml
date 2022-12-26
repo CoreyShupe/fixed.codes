@@ -39,13 +39,13 @@ jobs:
             helm-chart: "web"
             language: "nuxt"
             ingress-prefix: ""
-            dependencies: |
+            dependencies:
               - "web/**"
           - app-name: "web-api"
             helm-chart: "web"
             language: "rust"
             ingress-prefix: "api."
-            dependencies: |
+            dependencies:
               - "web-api/**"
               - "web_commons/**"
     uses: "./.github/workflows/generic.yaml"
