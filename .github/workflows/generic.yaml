@@ -59,7 +59,7 @@ jobs:
   deploy-kubernetes:
     needs: [build-docker-file]
     secrets: inherit
-    uses: ./.github/workflows/deploy-kuberntes.yaml
+    uses: ./.github/workflows/deploy-kubernetes.yaml
     with:
       app-name: ${{ inputs.app.app-name }}
       helm-chart: ${{ inputs.app.helm-chart }}
