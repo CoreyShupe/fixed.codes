@@ -1,0 +1,82 @@
+# Main entrypoint for most service deployment actions
+#
+# Eventually there will be an exception for dependency creation which can be built prior.
+#
+# There are currently no exceptions to this - everything filters through here
+# this is basically just the "switcher" for dev and production
+# this allows us to create actions which utilize different branch profiles
+# along with different "build" profiles
+#
+# Each language used will have their own common "action" which will build that language
+# They will be under `.github/actions/arch/<language>.yaml`
+# Each will take in a "app-name", "helm-chart", "ingress-prefix", "dependencies"
+# A service action will only be run if the path for `dependencies` has any changes
+
+name: Build and Deploy Service Matrix
+
+on:
+  workflow_call:
+    inputs:
+      build-path:
+        description: "Maps to the docker file BUILD_PATH argument"
+        required: true
+        type: string
+      build-profile:
+        description: "Maps to the docker file BUILD_PROFILE argument"
+        required: true
+        type: string
+      k8s-deployment-ns:
+        description: "Kubernetes deployment namespace"
+        required: true
+        type: string
+      k8s-ingress-suffix:
+        description: "Kubernetes ingress suffix"
+        required: true
+        type: string
+      k8s-ingress-tls-name:
+        description: "Kubernetes ingress TLS name"
+        required: true
+        type: string
+      tag-prefix:
+        description: "Prefix used for docker image tag"
+        required: true
+        type: string
+
+jobs:
+  build_deploy_matrix:
+    name: Build and Deploy Service Matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app:
+          - app-name: "web"
+            helm-chart: "web"
+            language: "Nuxt"
+            ingress-prefix: ""
+            dependencies: |
+              - "web/**"
+          - app-name: "web-api"
+            helm-chart: "web"
+            language: "Rust"
+            ingress-prefix: "api."
+            dependencies: |
+              - "web-api/**"
+              - "web_commons/**"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Dependency Change Detector
+        uses: dorny/paths-filter@v2
+        id: change-detector
+        with.filters.deps: ${{ inputs.app.dependencies }}
+      - name: Execute Language Based Deployment
+        needs: [change-detector]
+        if: ${{ steps.change-detector.outputs.deps == true }}
+        uses: ./github/actions/arch/${{matrix.app.language}}.yaml
+        with:
+          app: ${{ matrix.app }}
+          build-path: ${{ inputs.build-path }}
+          k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
+          k8s-ingress-suffix: ${{ inputs.k8s-ingress-suffix }}
+          k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
+          tag-prefix: ${{ inputs.tag-prefix }}

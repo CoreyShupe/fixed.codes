@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Production Service Matrix
+    name: Checkout and Deploy Production Service Matrix
     uses: ./local_workflows/deploy-service-matrix.yaml
     secrets: inherit
     with:
