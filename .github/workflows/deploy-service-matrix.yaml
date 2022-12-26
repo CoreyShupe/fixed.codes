@@ -36,7 +36,7 @@ jobs:
       matrix:
         app:
           - app-name: "web"
-            helm-chart: "web"
+            helm-chart: "basic_service"
             language: "nuxt"
             ingress-prefix: ""
             dependencies: |
@@ -44,7 +44,7 @@ jobs:
                 - "web/**"
                 - "deploy/nuxt.Dockerfile"
           - app-name: "web-api"
-            helm-chart: "web"
+            helm-chart: "basic_service"
             language: "rust"
             ingress-prefix: "api."
             dependencies: |
