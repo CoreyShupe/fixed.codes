@@ -39,20 +39,20 @@ jobs:
             helm-chart: "web"
             language: "nuxt"
             ingress-prefix: ""
-            dependencies:
+            dependencies: |
               - "web/**"
           - app-name: "web-api"
             helm-chart: "web"
             language: "rust"
             ingress-prefix: "api."
-            dependencies:
+            dependencies: |
               - "web-api/**"
               - "web_commons/**"
     uses: "./.github/workflows/generic.yaml"
     with:
       app-name: ${{ matrix.app.app-name }}
       app-language: ${{ matrix.app.language }}
-      app-dependencies: ${{ toJson(matrix.app.dependencies) }}
+      app-dependencies: ${{ matrix.app.dependencies }}
       app-helm-chart: ${{ matrix.app.helm-chart }}
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}

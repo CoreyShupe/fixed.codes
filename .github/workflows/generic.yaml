@@ -57,8 +57,9 @@ jobs:
         uses: dorny/paths-filter@v2
         id: change-detector
         with:
-          filters:
-            deps: ${{ inputs.app-dependencies }}
+          filters: |
+            deps:
+              ${{ inputs.app-dependencies }}
   build-docker-file:
     needs: [change-detector]
     if: ${{ needs.change-detector.outputs.detected == true }}
