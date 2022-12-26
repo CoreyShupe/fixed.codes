@@ -9,7 +9,6 @@ RUN apk add --update \
     bash
 
 ARG APP_NAME
-
 WORKDIR /app
 COPY $APP_NAME/package.json .
 COPY $APP_NAME/yarn.lock .
