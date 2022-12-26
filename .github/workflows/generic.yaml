@@ -3,10 +3,22 @@ name: Deploy Generic App
 on:
   workflow_call:
     inputs:
-      app:
-        description: "App matrix assignment"
+      app-name:
+        description: "App name"
         required: true
-        type: object
+        type: string
+      app-language:
+        description: "App language"
+        required: true
+        type: string
+      app-dependencies:
+        description: "App dependencies"
+        required: true
+        type: string
+      app-helm-chart:
+        description: "App helm chart"
+        required: true
+        type: string
       build-path:
         description: "Maps to the docker file BUILD_PATH argument"
         required: true
@@ -44,25 +56,27 @@ jobs:
       - name: Dependency Change Detector
         uses: dorny/paths-filter@v2
         id: change-detector
-        with.filters.deps: ${{ inputs.app.dependencies }}
+        with:
+          filters:
+            deps: ${{ fromJson(inputs.app-dependencies) }}
   build-docker-file:
     needs: [change-detector]
     if: ${{ jobs.change-detector.outputs.detected == true }}
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
-      dockerfile: ${{ inputs.app.language }}.Dockerfile
+      dockerfile: ${{ inputs.app-language }}.Dockerfile
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
-      app-name: ${{ inputs.app.app-name }}
+      app-name: ${{ inputs.app-name }}
       tag-prefix: ${{ inputs.tag-prefix }}
   deploy-kubernetes:
     needs: [build-docker-file]
     secrets: inherit
     uses: ./.github/workflows/deploy-kubernetes.yaml
     with:
-      app-name: ${{ inputs.app.app-name }}
-      helm-chart: ${{ inputs.app.helm-chart }}
+      app-name: ${{ inputs.app-name }}
+      helm-chart: ${{ inputs.app-helm-chart }}
       image-tag: ${{ jobs.build-docker-file.outputs.image-tag }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
       k8s-ingress-name: ${{ inputs.k8s-ingress-name }}
