@@ -8,12 +8,14 @@ RUN apk add --update \
     openssl \
     bash
 
+ARG $APP_NAME
+
 WORKDIR /app
-COPY package.json .
-COPY yarn.lock .
+COPY $APP_NAME/package.json .
+COPY $APP_NAME/yarn.lock .
 RUN yarn install
 
-COPY . .
+COPY $APP_NAME .
 RUN yarn generate --fail-on-error
 
 FROM build as runtime
