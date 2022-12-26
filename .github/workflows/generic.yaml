@@ -60,7 +60,7 @@ jobs:
           filters: ${{ inputs.app-dependencies }}
   build-docker-file:
     needs: [change-detector]
-    if: ${{ needs.change-detector.outputs.deps == true }}
+    if: needs.change-detector.outputs.deps == 'true'
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
