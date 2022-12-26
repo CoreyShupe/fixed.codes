@@ -25,7 +25,9 @@ on:
         required: true
         type: string
     outputs:
-      image-tag: ${{ jobs.build.outputs.image-tag }}
+      image-tag:
+        description: Pushed image tag for docker image
+        value: ${{ jobs.build.outputs.image-tag }}
 
 env:
   REGISTRY: ghcr.io
