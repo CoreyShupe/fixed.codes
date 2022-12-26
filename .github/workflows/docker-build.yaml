@@ -24,10 +24,6 @@ on:
         description: "Prefix used for docker image tag"
         required: true
         type: string
-    outputs:
-      image-tag:
-        description: Pushed image tag for docker image
-        value: ${{ jobs.build.outputs.image-tag }}
 
 env:
   REGISTRY: ghcr.io
@@ -35,8 +31,6 @@ env:
 
 jobs:
   build:
-    outputs:
-      image-tag: ${{ steps.meta.outputs.labels.org.opencontainers.image.version }}
     permissions:
       contents: read
       packages: write

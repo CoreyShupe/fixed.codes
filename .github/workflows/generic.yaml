@@ -76,7 +76,7 @@ jobs:
     with:
       app-name: ${{ inputs.app-name }}
       helm-chart: ${{ inputs.app-helm-chart }}
-      image-tag: ${{ needs.build-docker-file.outputs.image-tag }}
+      image-tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
       k8s-ingress-name: ${{ inputs.k8s-ingress-name }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
