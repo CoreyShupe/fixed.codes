@@ -47,7 +47,7 @@ on:
 jobs:
   change-detector:
     outputs:
-      detected: ${{ steps.change-detector.outputs.deps }}
+      deps: ${{ steps.change-detector.outputs.deps }}
     runs-on: ubuntu-latest
     name: Detect Changes To Dependencies
     steps:
