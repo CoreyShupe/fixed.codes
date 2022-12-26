@@ -61,7 +61,7 @@ jobs:
             deps: ${{ fromJson(inputs.app-dependencies) }}
   build-docker-file:
     needs: [change-detector]
-    if: ${{ jobs.change-detector.outputs.detected == true }}
+    if: ${{ needs.change-detector.outputs.detected == true }}
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
