@@ -16,12 +16,16 @@ on:
 jobs:
   build_and_deploy:
     name: Deploy Development Service Matrix
-    uses: ./local_workflows/deploy-service-matrix.yaml
-    secrets: inherit
-    with:
-      build-path: "debug"
-      build-profile: "dev"
-      k8s-deployment-ns: "develop"
-      k8s-ingress-suffix: "dev.fixed.codes"
-      k8s-ingress-tls-name: "wildcard-dev-fixed-codes-tls"
-      tag-prefix: "dev-"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (v3)
+        uses: actions/checkout@v3
+      - name: Deploy Service Matrix
+        uses: ./github/actions/deploy-service-matrix.yaml
+          with:
+            build-path: "debug"
+            build-profile: "dev"
+            k8s-deployment-ns: "develop"
+            k8s-ingress-suffix: "dev.fixed.codes"
+            k8s-ingress-tls-name: "wildcard-dev-fixed-codes-tls"
+            tag-prefix: "dev-"
