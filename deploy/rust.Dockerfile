@@ -16,6 +16,7 @@ FROM chef AS builder
 
 COPY --from=planner /app/recipe.json recipe.json
 
+ARG APP_NAME
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
 
@@ -23,16 +24,13 @@ RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
 
 COPY . .
 
-ARG APP_NAME
-
 RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
-COPY resources/$APP_NAME /resources
 RUN ls /resources
 RUN ls /resources/landing
 
-FROM alpine
+FROM alpine AS runtime
 
 RUN apk add --update \
     su-exec \
@@ -42,17 +40,16 @@ RUN apk add --update \
     openssl \
     bash
 
-RUN adduser -D app -s /sbin/nologin
-
 WORKDIR /app
 
+ARG APP_NAME
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
-ARG APP_NAME
 
 COPY --from=builder /app/target/$BUILD_PATH/$APP_NAME /app/executable
 COPY resources/$APP_NAME /app/resources
 
+RUN adduser -D app -s /sbin/nologin
 RUN chown -R app:app /app/
 
 ENTRYPOINT ["/sbin/tini", "--"]

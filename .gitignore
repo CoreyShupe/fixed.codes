@@ -22,3 +22,11 @@ Cargo.lock
 
 # Project files
 output.log
+
+/web/dist/
+
+.nuxt
+
+node_modules
+
+.vite

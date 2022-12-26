@@ -4,13 +4,20 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    types:
+      - opened
+      - edited
+      - updated
+    branches:
+      - develop
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build_and_deploy:
     name: Deploy Development Service Matrix
-    uses: ./.github/workflows/deploy-service-matrix.yaml
     secrets: inherit
+    uses: ./.github/workflows/deploy-service-matrix.yaml
     with:
       build-path: "debug"
       build-profile: "dev"

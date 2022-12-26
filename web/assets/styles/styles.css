@@ -1,0 +1,49 @@
+:root {
+    --nav-color: #1f2735;
+    --background-color: #34495e;
+    --text-color: #e74c3c;
+    --lift-color: #2c3e50;
+    --light-border-color: #7f8c8d;
+    --border-accent-color: #8e44ad;
+}
+
+* {
+    margin: 0 0;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-optical-sizing: auto;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.content {
+    border-radius: 2px;
+    color: var(--text-color);
+    background-color: var(--lift-color);
+    text-decoration: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.content:not(#clickable) :not(.material-icons),
+#clickable.content:not(:hover) :not(.router-link-exact-active) :not(.material-icons) {
+    outline: 2px solid var(--light-border-color);
+}
+
+#clickable.content:hover,
+.router-link-exact-active {
+    outline: 2px solid var(--border-accent-color);
+}
+
+.navigation {
+    background-color: var(--nav-color);
+    display: flex;
+    padding: 10px 10px;
+}
+
+.nav-item {
+    padding: 15px 15px;
+    display: flex;
+    margin: 10px 12px;
+}

@@ -6,10 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-files = "0.6.2"
-actix-http = "3.2.2"
-actix-web = "4.2.1"
-anyhow = "1.0.66"
-log = "0.4.17"
-mime = "0.3.16"
-mime_guess = "2.0.4"
+# workspace dependencies
+anyhow.workspace = true
+chrono.workspace = true
+fern.workspace = true
+log.workspace = true
+serde = { workspace = true, optional = true }
+serde_derive = { workspace = true, optional = true }
+
+[features]
+serde_support = ["serde", "serde_derive", "log/serde"]

@@ -1,5 +1,5 @@
 [package]
-name = "web"
+name = "web-api"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,8 +7,8 @@ edition = "2021"
 
 [dependencies]
 web_commons = { path = "../web_commons" }
-actix-web = "4.2.1"
-anyhow = "1.0.66"
-chrono = "0.4.23"
-fern = "0.6.1"
-log = "0.4.17"
+
+# workspace dependencies
+actix-web.workspace = true
+anyhow.workspace = true
+log.workspace = true
