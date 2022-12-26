@@ -62,7 +62,7 @@ jobs:
             dependencies: |
               - "web-api/**"
               - "web_commons/**"
-    uses: ./.github/workflows/${{ matrix.language }}.yaml
+    uses: "./.github/workflows/${{ matrix.language }}.yaml"
     with:
       app: ${{ matrix.app }}
       build-path: ${{ inputs.build-path }}
