@@ -50,7 +50,7 @@ jobs:
     needs: [change-detector]
     if: ${{ jobs.change-detector.outputs.detected == true }}
     secrets: inherit
-    uses: ./github/workflows/docker-build.yaml
+    uses: ./.github/workflows/docker-build.yaml
     with:
       dockerfile: rust.Dockerfile
       build-path: ${{ inputs.build-path }}
@@ -60,7 +60,7 @@ jobs:
   deploy-kubernetes:
     needs: [build-docker-file]
     secrets: inherit
-    uses: ./github/workflows/deploy-kuberntes.yaml
+    uses: ./.github/workflows/deploy-kuberntes.yaml
     with:
       app-name: ${{ inputs.app.app-name }}
       helm-chart: ${{ inputs.app.helm-chart }}
