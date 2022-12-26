@@ -1,4 +1,4 @@
-name: Deploy Nuxt App
+name: Deploy Generic App
 
 on:
   workflow_call:
@@ -32,7 +32,6 @@ on:
         required: true
         type: string
 
-
 jobs:
   change-detector:
     outputs:
@@ -52,7 +51,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
-      dockerfile: nuxt.Dockerfile
+      dockerfile: ${{ inputs.app.language }}.Dockerfile
       build-path: ${{ inputs.build-path }}
       build-profile: ${{ inputs.build-profile }}
       app-name: ${{ inputs.app.app-name }}

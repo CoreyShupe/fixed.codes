@@ -1,17 +1,3 @@
-# Main entrypoint for most service deployment actions
-#
-# Eventually there will be an exception for dependency creation which can be built prior.
-#
-# There are currently no exceptions to this - everything filters through here
-# this is basically just the "switcher" for dev and production
-# this allows us to create actions which utilize different branch profiles
-# along with different "build" profiles
-#
-# Each language used will have their own common "action" which will build that language
-# They will be under `.github/workflows/<language>.yaml`
-# Each will take in a "app-name", "helm-chart", "ingress-prefix", "dependencies"
-# A service action will only be run if the path for `dependencies` has any changes
-
 name: Build and Deploy Service Matrix
 
 on:
@@ -51,18 +37,18 @@ jobs:
         app:
           - app-name: "web"
             helm-chart: "web"
-            language: "Nuxt"
+            language: "nuxt"
             ingress-prefix: ""
             dependencies: |
               - "web/**"
           - app-name: "web-api"
             helm-chart: "web"
-            language: "Rust"
+            language: "rust"
             ingress-prefix: "api."
             dependencies: |
               - "web-api/**"
               - "web_commons/**"
-    uses: "./.github/workflows/${{ matrix.language }}.yaml"
+    uses: "./.github/workflows/generic.yaml"
     with:
       app: ${{ matrix.app }}
       build-path: ${{ inputs.build-path }}
