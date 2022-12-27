@@ -4,11 +4,5 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <SiteNavigation/>
-<!--    <slot/>-->
+    <slot/>
 </template>
-
-<script>
-export default {
-    name: 'DefaultLayout',
-}
-</script>
