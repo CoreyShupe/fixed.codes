@@ -47,7 +47,7 @@ on:
 jobs:
   change-detector:
     outputs:
-      detected: ${{ steps.change-detector.outputs.deps }}
+      deps: ${{ steps.change-detector.outputs.deps }}
     runs-on: ubuntu-latest
     name: Detect Changes To Dependencies
     steps:
@@ -60,7 +60,7 @@ jobs:
           filters: ${{ inputs.app-dependencies }}
   build-docker-file:
     needs: [change-detector]
-    if: ${{ needs.change-detector.outputs.detected == true }}
+    if: needs.change-detector.outputs.deps == 'true'
     secrets: inherit
     uses: ./.github/workflows/docker-build.yaml
     with:
@@ -76,7 +76,7 @@ jobs:
     with:
       app-name: ${{ inputs.app-name }}
       helm-chart: ${{ inputs.app-helm-chart }}
-      image-tag: ${{ needs.build-docker-file.outputs.image-tag }}
+      image-tag-prefix: ${{ inputs.tag-prefix }}
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
       k8s-ingress-name: ${{ inputs.k8s-ingress-name }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
