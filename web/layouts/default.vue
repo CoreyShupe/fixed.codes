@@ -4,5 +4,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <SiteNavigation/>
-    <slot/>
+    <main>
+      <slot/>
+    </main>
 </template>
