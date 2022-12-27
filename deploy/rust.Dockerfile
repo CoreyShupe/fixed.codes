@@ -9,6 +9,7 @@ RUN ((cat /etc/os-release | grep ID | grep alpine) && apk add --no-cache musl-de
 WORKDIR /app
 
 FROM chef AS planner
+
 COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
