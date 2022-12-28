@@ -36,14 +36,36 @@ body {
     outline: 2px solid var(--border-accent-color);
 }
 
-.navigation {
+.header {
     background-color: var(--nav-color);
+    color: var(--text-color);
     display: flex;
-    padding: 10px 10px;
 }
 
-.nav-item {
-    padding: 15px 15px;
+.header > * {
+    margin: 0 0;
+    padding: 10px 10px;
+    width: 100%;
+}
+
+.header_branding {
     display: flex;
-    margin: 12px 14px;
+    justify-content: flex-start;
+}
+
+.navigation {
+    flex-direction: row-reverse;
+    background-color: var(--nav-color);
+    display: flex;
+}
+
+img.header_content {
+    margin: 6px 8px;
+    border-radius: 50%;
+}
+
+.nav-item, .header_content:not(img) {
+    padding: 10px 10px;
+    display: flex;
+    margin: 6px 8px;
 }
