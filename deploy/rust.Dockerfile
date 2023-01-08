@@ -11,7 +11,7 @@ WORKDIR /app
 FROM chef AS planner
 
 COPY . .
-RUN cargo chef prepare --recipe-path recipe.json
+RUN cargo +nightly chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
 
@@ -31,11 +31,11 @@ RUN apk add --update \
     bash \
     pkgconfig
 
-RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
+RUN cargo +nightly chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
 
 COPY . .
 
-RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
+RUN cargo +nightly build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
 FROM alpine AS runtime
