@@ -57,7 +57,7 @@ jobs:
                 - "web-api/**"
                 - "web_commons/**"
                 - "deploy/rust.Dockerfile"
-          - app-name: "mc_server"
+          - app-name: "mc-server"
             helm-chart: "basic_service"
             language: "rust"
             ingress-prefix: "mc."

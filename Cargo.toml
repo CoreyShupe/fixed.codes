@@ -3,7 +3,7 @@
 members = [
     "web-api",
     "web_commons",
-    "mc_server"
+    "mc-server"
 ]
 
 [workspace.dependencies]

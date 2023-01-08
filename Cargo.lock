@@ -1000,7 +1000,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mc_server"
+name = "mc-server"
 version = "0.1.0"
 dependencies = [
  "anyhow",
