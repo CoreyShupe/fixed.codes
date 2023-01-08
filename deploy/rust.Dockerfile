@@ -21,15 +21,6 @@ ARG APP_NAME
 ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
 
-RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
-
-COPY . .
-
-RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
-RUN chmod +x target/$BUILD_PATH/$APP_NAME
-
-FROM alpine AS runtime
-
 RUN apk add --update \
     su-exec \
     tini \
@@ -38,6 +29,15 @@ RUN apk add --update \
     openssl \
     bash \
     pkgconfig
+
+RUN cargo chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
+
+COPY . .
+
+RUN cargo build --profile $BUILD_PROFILE -p $APP_NAME
+RUN chmod +x target/$BUILD_PATH/$APP_NAME
+
+FROM alpine AS runtime
 
 WORKDIR /app
 
