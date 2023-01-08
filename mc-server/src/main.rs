@@ -1,8 +1,10 @@
 use drax::prelude::{ErrorType, TransportError};
 use drax::PinnedLivelyResult;
+use log::LevelFilter;
 use mcprotocol::clientbound::status::StatusResponse;
 use mcprotocol::common::chat::Chat;
 use shovel::server::MinecraftServerStatusBuilder;
+use web_commons::logger::LoggerOptions;
 
 pub struct BasicStatus;
 
@@ -31,8 +33,10 @@ pub const COMPRESSION_THRESHOLD: i32 = 1024;
 
 #[tokio::main]
 pub async fn main() -> anyhow::Result<()> {
-    web_commons::logger::attach_default_system_logger()?;
-
+    web_commons::logger::attach_system_logger(LoggerOptions {
+        log_level: LevelFilter::Trace,
+        log_file: None,
+    })?;
     log::info!("Server initializing!");
 
     if let Err(err) = shovel::spawn_server! {

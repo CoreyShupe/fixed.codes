@@ -36,29 +36,29 @@ jobs:
       fail-fast: false
       matrix:
         app:
-#          - app-name: "web"
-#            helm-chart: "basic_service"
-#            language: "nuxt"
-#            ingress-prefix: ""
-#            service-type: "ClusterIP"
-#            service-port: 3000
-#            targetPort: http
-#            dependencies: |
-#              deps:
-#                - "web/**"
-#                - "deploy/nuxt.Dockerfile"
-#          - app-name: "web-api"
-#            helm-chart: "basic_service"
-#            language: "rust"
-#            ingress-prefix: "api."
-#            service-type: "ClusterIP"
-#            service-port: 3000
-#            targetPort: http
-#            dependencies: |
-#              deps:
-#                - "web-api/**"
-#                - "web_commons/**"
-#                - "deploy/rust.Dockerfile"
+          #          - app-name: "web"
+          #            helm-chart: "basic_service"
+          #            language: "nuxt"
+          #            ingress-prefix: ""
+          #            service-type: "ClusterIP"
+          #            service-port: 3000
+          #            targetPort: http
+          #            dependencies: |
+          #              deps:
+          #                - "web/**"
+          #                - "deploy/nuxt.Dockerfile"
+          #          - app-name: "web-api"
+          #            helm-chart: "basic_service"
+          #            language: "rust"
+          #            ingress-prefix: "api."
+          #            service-type: "ClusterIP"
+          #            service-port: 3000
+          #            targetPort: http
+          #            dependencies: |
+          #              deps:
+          #                - "web-api/**"
+          #                - "web_commons/**"
+          #                - "deploy/rust.Dockerfile"
           - app-name: "mc-server"
             helm-chart: "basic_service"
             language: "rust"
@@ -71,6 +71,8 @@ jobs:
                 - "mc-server/**"
                 - "web_commons/**"
                 - "deploy/rust.Dockerfile"
+                - "Cargo.lock"
+                - "Cargo.toml"
     uses: "./.github/workflows/generic.yaml"
     with:
       app-name: ${{ matrix.app.app-name }}

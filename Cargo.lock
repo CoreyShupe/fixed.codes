@@ -297,7 +297,7 @@ dependencies = [
 [[package]]
 name = "drax"
 version = "0.1.0"
-source = "git+https://github.com/ScrapyardRs/Drax?branch=develop#94088ce5f5cbb1e5ce59cae3729b5a9b2857a1a5"
+source = "git+https://github.com/ScrapyardRs/Drax?branch=develop#79889899cd1c83f01afe0176ddca5dd270db33ac"
 dependencies = [
  "aes",
  "cesu8",
@@ -705,7 +705,7 @@ dependencies = [
 [[package]]
 name = "mcprotocol"
 version = "0.1.0"
-source = "git+https://github.com/ScrapyardRs/MCProtocol.rs?branch=develop#b31c850735d7f693c410482a1dd4febca4edbe3a"
+source = "git+https://github.com/ScrapyardRs/MCProtocol.rs?branch=develop#abecf88c51117577b06a3617af449680c2482f25"
 dependencies = [
  "drax",
  "serde",
@@ -1270,7 +1270,7 @@ dependencies = [
 [[package]]
 name = "shovel"
 version = "0.1.0"
-source = "git+https://github.com/ScrapyardRs/Shovel?branch=develop#a32fe05cb74af962178237f6bfb29c4b14002053"
+source = "git+https://github.com/ScrapyardRs/Shovel?branch=develop#8c642eb6c54467e252c5cba87f4ecd92db15753d"
 dependencies = [
  "async-compression",
  "drax",
