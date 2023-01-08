@@ -27,6 +27,7 @@ RUN apk add --update \
     curl \
     vim \
     openssl \
+    openssl-dev \
     bash \
     pkgconfig
 
