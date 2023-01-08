@@ -1133,7 +1133,7 @@ dependencies = [
 [[package]]
 name = "shovel"
 version = "0.1.0"
-source = "git+https://github.com/ScrapyardRs/Shovel?branch=develop#b0058e7767fdb2958043c86aaa5824bf25d19698"
+source = "git+https://github.com/ScrapyardRs/Shovel?branch=develop#553f9bdd9d042cd2c6fe418ca5b9ac374fd853d5"
 dependencies = [
  "async-compression",
  "drax",
@@ -1154,6 +1154,7 @@ dependencies = [
  "sha-1",
  "sha2",
  "tokio",
+ "tokio-native-tls",
 ]
 
 [[package]]
