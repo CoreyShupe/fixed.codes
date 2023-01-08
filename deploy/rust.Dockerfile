@@ -1,5 +1,8 @@
 FROM rust:1.65-alpine AS chef
 
+RUN rustup update nightly
+RUN rustup default nightly
+
 ARG CHEF_TAG=0.1.50
 
 RUN ((cat /etc/os-release | grep ID | grep alpine) && apk add --no-cache musl-dev || true) \
