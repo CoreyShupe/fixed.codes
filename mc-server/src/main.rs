@@ -72,7 +72,7 @@ pub async fn main() -> anyhow::Result<()> {
         @mc_status BasicStatus,
         client -> {
             log::info!("New client {:#?}", client.profile);
-            client.compress_and_complete_login(COMPRESSION_THRESHOLD).await?;
+            client.complete_login().await?;
             handover_authenticated_client(client).await
         }
     } {
