@@ -65,7 +65,7 @@ jobs:
             service-port: 25565
             dependencies: |
               deps:
-                - "mc_server/**"
+                - "mc-server/**"
                 - "web_commons/**"
                 - "deploy/rust.Dockerfile"
     uses: "./.github/workflows/generic.yaml"

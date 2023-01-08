@@ -15,7 +15,6 @@ impl MinecraftServerStatusBuilder for BasicStatus {
 
             let mut line_2 = Chat::text("This server is simply a showcase.");
             line_2.modify_style(|s| s.color("red"));
-
             chat.append_extra(vec![line_1, line_2]);
 
             Ok(shovel::status_builder! {
