@@ -12,7 +12,6 @@ impl MinecraftServerStatusBuilder for BasicStatus {
 
             let mut line_1 = Chat::text("Hello, this is a demo for Shovel.\n");
             line_1.modify_style(|s| s.color("gold"));
-
             let mut line_2 = Chat::text("This server is simply a showcase.");
             line_2.modify_style(|s| s.color("red"));
 
