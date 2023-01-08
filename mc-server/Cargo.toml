@@ -13,3 +13,4 @@ mcprotocol = { git = "https://github.com/ScrapyardRs/MCProtocol.rs", branch = "d
 shovel = { git = "https://github.com/ScrapyardRs/Shovel", branch = "develop" }
 tokio = { version = "1.24.1", features = ["full"] }
 anyhow.workspace = true
+log.workspace = true

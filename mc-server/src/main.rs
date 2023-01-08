@@ -32,10 +32,13 @@ pub const COMPRESSION_THRESHOLD: i32 = 1024;
 pub async fn main() -> anyhow::Result<()> {
     web_commons::logger::attach_default_system_logger()?;
 
+    log::info!("Server initializing!");
+
     (shovel::spawn_server! {
         @bind "0.0.0.0:25565",
         @mc_status BasicStatus,
         client -> {
+            log::info!("New client {:#?}", client.profile);
             client.compress_and_complete_login(COMPRESSION_THRESHOLD).await?;
             client.disconnect("This is as far as I've gotten...").await?;
             Ok(())
