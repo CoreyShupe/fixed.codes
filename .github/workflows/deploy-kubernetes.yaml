@@ -37,6 +37,11 @@ on:
         required: false
         type: number
         default: 3000
+      service-target-port:
+        description: "Kubernetes service target port"
+        required: false
+        type: string
+        default: http
 
 env:
   IMAGE_REPOSITORY: ghcr.io/coreyshupe/fixed.codes
@@ -70,6 +75,7 @@ jobs:
           --set fullnameOverride=${{ inputs.app-name }} \
           --set service.type=${{ inputs.service-type }} \
           --set service.port=${{ inputs.service-port }} \
+          --set service.targetPort=${{ inputs.service-target-port }} \
           --set image.repository=${{ env.IMAGE_REPOSITORY }}/${{ inputs.app-name }} \
           --set image.tag=${{ inputs.image-tag-prefix }}${{ steps.vars.outputs.sha_short }} \
           --set "ingress.enabled=true,ingress.hosts[0].host=${{ inputs.k8s-ingress-name }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \

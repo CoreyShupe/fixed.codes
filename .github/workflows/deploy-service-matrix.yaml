@@ -36,33 +36,36 @@ jobs:
       fail-fast: false
       matrix:
         app:
-          - app-name: "web"
-            helm-chart: "basic_service"
-            language: "nuxt"
-            ingress-prefix: ""
-            service-type: "ClusterIP"
-            service-port: 3000
-            dependencies: |
-              deps:
-                - "web/**"
-                - "deploy/nuxt.Dockerfile"
-          - app-name: "web-api"
-            helm-chart: "basic_service"
-            language: "rust"
-            ingress-prefix: "api."
-            service-type: "ClusterIP"
-            service-port: 3000
-            dependencies: |
-              deps:
-                - "web-api/**"
-                - "web_commons/**"
-                - "deploy/rust.Dockerfile"
+#          - app-name: "web"
+#            helm-chart: "basic_service"
+#            language: "nuxt"
+#            ingress-prefix: ""
+#            service-type: "ClusterIP"
+#            service-port: 3000
+#            targetPort: http
+#            dependencies: |
+#              deps:
+#                - "web/**"
+#                - "deploy/nuxt.Dockerfile"
+#          - app-name: "web-api"
+#            helm-chart: "basic_service"
+#            language: "rust"
+#            ingress-prefix: "api."
+#            service-type: "ClusterIP"
+#            service-port: 3000
+#            targetPort: http
+#            dependencies: |
+#              deps:
+#                - "web-api/**"
+#                - "web_commons/**"
+#                - "deploy/rust.Dockerfile"
           - app-name: "mc-server"
             helm-chart: "basic_service"
             language: "rust"
             ingress-prefix: "mc."
             service-type: "LoadBalancer"
             service-port: 25565
+            targetPort: 25565
             dependencies: |
               deps:
                 - "mc-server/**"

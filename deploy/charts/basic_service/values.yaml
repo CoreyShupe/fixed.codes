@@ -29,6 +29,7 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 3000
+  targetPort: http
 
 ingress:
   enabled: false
