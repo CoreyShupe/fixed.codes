@@ -38,6 +38,7 @@ RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
 FROM alpine AS runtime
 
+RUN apk update && apk upgrade
 RUN apk add --update \
     su-exec \
     tini \
@@ -46,6 +47,7 @@ RUN apk add --update \
     openssl \
     openssl-dev \
     bash \
+    ca-certificates \
     pkgconfig
 
 WORKDIR /app
