@@ -297,7 +297,7 @@ dependencies = [
 [[package]]
 name = "drax"
 version = "0.1.0"
-source = "git+https://github.com/ScrapyardRs/Drax?branch=develop#8fd91c764495aa574bea8a9fbe91b94db8be6c3a"
+source = "git+https://github.com/ScrapyardRs/Drax?branch=develop#94088ce5f5cbb1e5ce59cae3729b5a9b2857a1a5"
 dependencies = [
  "aes",
  "cesu8",

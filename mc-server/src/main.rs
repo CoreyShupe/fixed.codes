@@ -1,3 +1,4 @@
+use drax::prelude::{ErrorType, TransportError};
 use drax::PinnedLivelyResult;
 use mcprotocol::clientbound::status::StatusResponse;
 use mcprotocol::common::chat::Chat;
@@ -34,7 +35,7 @@ pub async fn main() -> anyhow::Result<()> {
 
     log::info!("Server initializing!");
 
-    (shovel::spawn_server! {
+    if let Err(err) = shovel::spawn_server! {
         @bind "0.0.0.0:25565",
         @mc_status BasicStatus,
         client -> {
@@ -43,6 +44,12 @@ pub async fn main() -> anyhow::Result<()> {
             client.disconnect("This is as far as I've gotten...").await?;
             Ok(())
         }
-    })
-    .map_err(|err| anyhow::format_err!("{:?}", err))
+    } {
+        if matches!(err.error_type, ErrorType::EOF) {
+            return Ok(());
+        } else {
+            log::error!("Server encountered an error: {:?}", err);
+        }
+    }
+    Ok(())
 }
