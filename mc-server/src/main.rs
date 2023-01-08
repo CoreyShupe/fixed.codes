@@ -1,9 +1,10 @@
-use drax::prelude::{ErrorType, TransportError};
+use drax::prelude::ErrorType;
 use drax::PinnedLivelyResult;
 use log::LevelFilter;
 use mcprotocol::clientbound::status::StatusResponse;
 use mcprotocol::common::chat::Chat;
 use shovel::server::MinecraftServerStatusBuilder;
+
 use web_commons::logger::LoggerOptions;
 
 pub struct BasicStatus;
