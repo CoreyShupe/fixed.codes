@@ -619,7 +619,7 @@ dependencies = [
 [[package]]
 name = "mcprotocol"
 version = "0.1.0"
-source = "git+https://github.com/ScrapyardRs/MCProtocol.rs?branch=develop#abecf88c51117577b06a3617af449680c2482f25"
+source = "git+https://github.com/ScrapyardRs/MCProtocol.rs?branch=develop#7c43a0d787a4181fe17e45310ca34d285714bd28"
 dependencies = [
  "drax",
  "serde",

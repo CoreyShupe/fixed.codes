@@ -1,9 +1,13 @@
+mod initial_state_handler;
+
 use drax::prelude::ErrorType;
 use drax::PinnedLivelyResult;
 use log::LevelFilter;
+use mcprotocol::clientbound::play::ClientboundPlayRegistry::KeepAlive;
 use mcprotocol::clientbound::status::StatusResponse;
 use mcprotocol::common::chat::Chat;
-use shovel::server::MinecraftServerStatusBuilder;
+use mcprotocol::serverbound::play::ServerboundPlayRegistry;
+use shovel::server::{MinecraftServerStatusBuilder, ServerPlayer};
 
 use web_commons::logger::LoggerOptions;
 
@@ -32,6 +36,31 @@ impl MinecraftServerStatusBuilder for BasicStatus {
 
 pub const COMPRESSION_THRESHOLD: i32 = 1024;
 
+pub async fn handover_authenticated_client(mut player: ServerPlayer) -> drax::prelude::Result<()> {
+    player
+        .disconnect("This is as far as I've gotten...")
+        .await?;
+    initial_state_handler::send_dimension_info(&mut player).await?;
+    let mut seq = 0;
+    player.write_packet(&KeepAlive { id: 0 }).await?;
+    loop {
+        seq = seq + 1;
+        let packet = player.read_packet::<ServerboundPlayRegistry>().await?;
+        match packet {
+            ServerboundPlayRegistry::KeepAlive { .. } => {
+                log::info!(
+                    "Sending keep alive {seq} for player {}",
+                    player.profile.name
+                );
+                player.write_packet(&KeepAlive { id: seq }).await?;
+            }
+            _ => {
+                log::warn!("Received unhandled packet: {:?}", packet);
+            }
+        }
+    }
+}
+
 #[tokio::main]
 pub async fn main() -> anyhow::Result<()> {
     web_commons::logger::attach_system_logger(LoggerOptions {
@@ -46,8 +75,7 @@ pub async fn main() -> anyhow::Result<()> {
         client -> {
             log::info!("New client {:#?}", client.profile);
             client.compress_and_complete_login(COMPRESSION_THRESHOLD).await?;
-            client.disconnect("This is as far as I've gotten...").await?;
-            Ok(())
+            handover_authenticated_client(client).await
         }
     } {
         if matches!(err.error_type, ErrorType::EOF) {
