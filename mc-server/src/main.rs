@@ -37,9 +37,6 @@ impl MinecraftServerStatusBuilder for BasicStatus {
 pub const COMPRESSION_THRESHOLD: i32 = 1024;
 
 pub async fn handover_authenticated_client(mut player: ServerPlayer) -> drax::prelude::Result<()> {
-    player
-        .disconnect("This is as far as I've gotten...")
-        .await?;
     initial_state_handler::send_dimension_info(&mut player).await?;
     let mut seq = 0;
     player.write_packet(&KeepAlive { id: 0 }).await?;
@@ -64,7 +61,7 @@ pub async fn handover_authenticated_client(mut player: ServerPlayer) -> drax::pr
 #[tokio::main]
 pub async fn main() -> anyhow::Result<()> {
     web_commons::logger::attach_system_logger(LoggerOptions {
-        log_level: LevelFilter::Trace,
+        log_level: LevelFilter::Debug,
         log_file: None,
     })?;
     log::info!("Server initializing!");

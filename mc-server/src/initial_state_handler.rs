@@ -10,7 +10,6 @@ use mcprotocol::clientbound::play::{
 use mcprotocol::common::bit_set::BitSet;
 use mcprotocol::common::chunk::Chunk;
 use mcprotocol::common::play::{CommandEntry, CommandNode, Location, SimpleLocation};
-use mcprotocol::serverbound::play::ServerboundPlayRegistry;
 use shovel::server::ServerPlayer;
 use std::io::Cursor;
 
