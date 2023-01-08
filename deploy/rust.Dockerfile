@@ -36,7 +36,8 @@ RUN apk add --update \
     curl \
     vim \
     openssl \
-    bash
+    bash \
+    pkgconfig
 
 WORKDIR /app
 
