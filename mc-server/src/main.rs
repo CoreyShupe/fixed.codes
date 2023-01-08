@@ -38,24 +38,25 @@ pub const COMPRESSION_THRESHOLD: i32 = 1024;
 
 pub async fn handover_authenticated_client(mut player: ServerPlayer) -> drax::prelude::Result<()> {
     initial_state_handler::send_dimension_info(&mut player).await?;
-    let mut seq = 0;
-    player.write_packet(&KeepAlive { id: 0 }).await?;
-    loop {
-        seq = seq + 1;
-        let packet = player.read_packet::<ServerboundPlayRegistry>().await?;
-        match packet {
-            ServerboundPlayRegistry::KeepAlive { .. } => {
-                log::info!(
-                    "Sending keep alive {seq} for player {}",
-                    player.profile.name
-                );
-                player.write_packet(&KeepAlive { id: seq }).await?;
-            }
-            _ => {
-                log::warn!("Received unhandled packet: {:?}", packet);
-            }
-        }
-    }
+    player.disconnect("Dimension info is good").await
+    // let mut seq = 0;
+    // player.write_packet(&KeepAlive { id: 0 }).await?;
+    // loop {
+    //     seq = seq + 1;
+    //     let packet = player.read_packet::<ServerboundPlayRegistry>().await?;
+    //     match packet {
+    //         ServerboundPlayRegistry::KeepAlive { .. } => {
+    //             log::info!(
+    //                 "Sending keep alive {seq} for player {}",
+    //                 player.profile.name
+    //             );
+    //             player.write_packet(&KeepAlive { id: seq }).await?;
+    //         }
+    //         _ => {
+    //             log::warn!("Received unhandled packet: {:?}", packet);
+    //         }
+    //     }
+    // }
 }
 
 #[tokio::main]
