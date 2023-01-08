@@ -114,87 +114,87 @@ pub async fn send_dimension_info(player: &mut ServerPlayer) -> drax::prelude::Re
         })
         .await?;
 
-    // let mut brand_data = Cursor::new(Vec::new());
-    // DelegateStr::encode(&"Shovel Demo", &mut (), &mut brand_data).await?;
-    // player
-    //     .write_packet(&CustomPayload {
-    //         identifier: format!("minecraft:brand"),
-    //         data: brand_data.into_inner(),
-    //     })
-    //     .await?;
-    //
-    // player
-    //     .write_packet(&PlayerAbilities {
-    //         flags: 0x3,
-    //         flying_speed: 0.1,
-    //         walking_speed: 0.1,
-    //     })
-    //     .await?;
-    //
-    // player
-    //     .write_packet(&PlayerPosition {
-    //         location: Location {
-    //             inner_loc: SimpleLocation {
-    //                 x: 0.0,
-    //                 y: 50.0,
-    //                 z: 0.0,
-    //             },
-    //             yaw: 0.0,
-    //             pitch: 0.0,
-    //         },
-    //         relative_arguments: RelativeArgument::new(0x8),
-    //         id: 0,
-    //         dismount: false,
-    //     })
-    //     .await?;
-    //
-    // log::info!(
-    //     "Successfully logged in player {} ({})",
-    //     player.profile.name,
-    //     player.profile.id
-    // );
+    let mut brand_data = Cursor::new(Vec::new());
+    DelegateStr::encode(&"Shovel Demo", &mut (), &mut brand_data).await?;
+    player
+        .write_packet(&CustomPayload {
+            identifier: format!("minecraft:brand"),
+            data: brand_data.into_inner(),
+        })
+        .await?;
 
-    // player
-    //     .write_packet(&Commands {
-    //         commands: vec![CommandNode::Root {
-    //             entry: CommandEntry {
-    //                 flags: 0,
-    //                 redirect: 0,
-    //                 children: vec![],
-    //             },
-    //         }],
-    //         root_index: 0,
-    //     })
-    //     .await?;
+    player
+        .write_packet(&PlayerAbilities {
+            flags: 0x3,
+            flying_speed: 0.1,
+            walking_speed: 0.1,
+        })
+        .await?;
 
-    // for x in -5..5 {
-    //     for z in -5..5 {
-    //         let mut chunk = Chunk::new(x, z);
-    //         chunk.rewrite_plane(1, 3).expect("Plane should rewrite.");
-    //         chunk.rewrite_plane(2, 3).expect("Plane should rewrite.");
-    //         chunk.rewrite_plane(3, 1).expect("Plane should rewrite.");
-    //         chunk.rewrite_plane(4, 2).expect("Plane should rewrite.");
-    //
-    //         chunk.set_block_id(7, 25, 8, 2).expect("Block should set");
-    //
-    //         player
-    //             .write_packet(&LevelChunkWithLight {
-    //                 chunk_data: LevelChunkData {
-    //                     chunk,
-    //                     block_entities: vec![],
-    //                 },
-    //                 light_data: LightUpdateData {
-    //                     trust_edges: true,
-    //                     sky_y_mask: BitSet::value_of(vec![])?,
-    //                     block_y_mask: BitSet::value_of(vec![])?,
-    //                     empty_sky_y_mask: BitSet::value_of(vec![])?,
-    //                     empty_block_y_mask: BitSet::value_of(vec![])?,
-    //                     sky_updates: vec![vec![]; 2048],
-    //                     block_updates: vec![vec![]; 2048],
-    //                 },
-    //             })
-    //             .await?;
-    //     }
-    // }
+    player
+        .write_packet(&PlayerPosition {
+            location: Location {
+                inner_loc: SimpleLocation {
+                    x: 0.0,
+                    y: 50.0,
+                    z: 0.0,
+                },
+                yaw: 0.0,
+                pitch: 0.0,
+            },
+            relative_arguments: RelativeArgument::new(0x8),
+            id: 0,
+            dismount: false,
+        })
+        .await?;
+
+    log::info!(
+        "Successfully logged in player {} ({})",
+        player.profile.name,
+        player.profile.id
+    );
+
+    player
+        .write_packet(&Commands {
+            commands: vec![CommandNode::Root {
+                entry: CommandEntry {
+                    flags: 0,
+                    redirect: 0,
+                    children: vec![],
+                },
+            }],
+            root_index: 0,
+        })
+        .await?;
+
+    for x in -5..5 {
+        for z in -5..5 {
+            let mut chunk = Chunk::new(x, z);
+            chunk.rewrite_plane(1, 3).expect("Plane should rewrite.");
+            chunk.rewrite_plane(2, 3).expect("Plane should rewrite.");
+            chunk.rewrite_plane(3, 1).expect("Plane should rewrite.");
+            chunk.rewrite_plane(4, 2).expect("Plane should rewrite.");
+
+            chunk.set_block_id(7, 25, 8, 2).expect("Block should set");
+
+            player
+                .write_packet(&LevelChunkWithLight {
+                    chunk_data: LevelChunkData {
+                        chunk,
+                        block_entities: vec![],
+                    },
+                    light_data: LightUpdateData {
+                        trust_edges: true,
+                        sky_y_mask: BitSet::value_of(vec![])?,
+                        block_y_mask: BitSet::value_of(vec![])?,
+                        empty_sky_y_mask: BitSet::value_of(vec![])?,
+                        empty_block_y_mask: BitSet::value_of(vec![])?,
+                        sky_updates: vec![vec![]; 2048],
+                        block_updates: vec![vec![]; 2048],
+                    },
+                })
+                .await?;
+        }
+    }
     Ok(())
 }
