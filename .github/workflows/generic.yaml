@@ -43,6 +43,16 @@ on:
         description: "Kubernetes ingress TLS name"
         required: true
         type: string
+      service-type:
+        description: "Kubernetes service type"
+        required: false
+        type: string
+        default: "ClusterIP"
+      service-port:
+        description: "Kubernetes service port"
+        required: false
+        type: number
+        default: 3000
 
 jobs:
   change-detector:
