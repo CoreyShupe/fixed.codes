@@ -25,13 +25,8 @@ ARG BUILD_PROFILE
 ARG BUILD_PATH=$BUILD_PROFILE
 
 RUN apk add --update \
-    su-exec \
-    tini \
-    curl \
-    vim \
     openssl \
     openssl-dev \
-    bash \
     pkgconfig
 
 RUN cargo +nightly chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
@@ -42,6 +37,16 @@ RUN cargo +nightly build --profile $BUILD_PROFILE -p $APP_NAME
 RUN chmod +x target/$BUILD_PATH/$APP_NAME
 
 FROM alpine AS runtime
+
+RUN apk add --update \
+    su-exec \
+    tini \
+    curl \
+    vim \
+    openssl \
+    openssl-dev \
+    bash \
+    pkgconfig
 
 WORKDIR /app
 
