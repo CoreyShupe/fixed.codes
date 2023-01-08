@@ -90,3 +90,5 @@ jobs:
       k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
       k8s-ingress-name: ${{ inputs.k8s-ingress-name }}
       k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
+      service-type: ${{ inputs.service-type }}
+      service-port: ${{ inputs.service-port }}
