@@ -33,6 +33,7 @@ jobs:
     name: Build and Deploy Service Matrix
     secrets: inherit
     strategy:
+      fail-fast: false
       matrix:
         app:
           - app-name: "web"
