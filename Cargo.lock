@@ -1270,7 +1270,7 @@ dependencies = [
 [[package]]
 name = "shovel"
 version = "0.1.0"
-source = "git+https://github.com/ScrapyardRs/Shovel?branch=develop#8c642eb6c54467e252c5cba87f4ecd92db15753d"
+source = "git+https://github.com/ScrapyardRs/Shovel?branch=develop#1a449e77e442d28eab5de2fcaf3b56b6884030b9"
 dependencies = [
  "async-compression",
  "drax",
