@@ -9,6 +9,6 @@ edition = "2021"
 web_commons = { path = "../web_commons" }
 
 # workspace dependencies
-actix-web.workspace = true
 anyhow.workspace = true
 log.workspace = true
+actix-web = "4.2.1"

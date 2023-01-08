@@ -65,7 +65,7 @@ jobs:
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Helm install onto cluster
         run: |-
-          helm upgrade --install --atomic --wait --timeout 120s --create-namespace ${{ inputs.app-name }} deploy/charts/${{ inputs.helm-chart }} \
+          helm upgrade --install --atomic --wait --timeout 600s --create-namespace ${{ inputs.app-name }} deploy/charts/${{ inputs.helm-chart }} \
           --namespace ${{ inputs.k8s-deployment-ns }} \
           --set fullnameOverride=${{ inputs.app-name }} \
           --set service.type=${{ inputs.service-type }} \
