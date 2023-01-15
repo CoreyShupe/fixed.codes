@@ -1,13 +1,14 @@
 mod initial_state_handler;
 
 use drax::prelude::ErrorType;
-use drax::PinnedLivelyResult;
+use drax::{err_explain, PinnedLivelyResult};
 use log::LevelFilter;
 use mcprotocol::clientbound::play::ClientboundPlayRegistry::KeepAlive;
 use mcprotocol::clientbound::status::StatusResponse;
 use mcprotocol::common::chat::Chat;
 use mcprotocol::serverbound::play::ServerboundPlayRegistry;
 use shovel::server::{MinecraftServerStatusBuilder, ServerPlayer};
+use shovel::spawn_local;
 
 use web_commons::logger::LoggerOptions;
 
@@ -41,15 +42,18 @@ pub async fn handover_authenticated_client(mut player: ServerPlayer) -> drax::pr
     let mut seq = 0;
     player.write_packet(&KeepAlive { id: 0 }).await?;
     loop {
-        seq = seq + 1;
         let packet = player.read_packet::<ServerboundPlayRegistry>().await?;
         match packet {
             ServerboundPlayRegistry::KeepAlive { .. } => {
-                log::info!(
-                    "Sending keep alive {seq} for player {}",
-                    player.profile.name
-                );
-                player.write_packet(&KeepAlive { id: seq }).await?;
+                seq = seq + 1;
+                let writer_clone = player.clone_writer();
+                spawn_local! {
+                    let writer = writer_clone;
+                    let seq = seq;
+                    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+                    log::info!("Sending keepalive {seq}");
+                    writer.write_packet(&KeepAlive { id: seq }).await.ok();
+                }
             }
             _ => {
                 log::warn!("Received unhandled packet: {:?}", packet);
