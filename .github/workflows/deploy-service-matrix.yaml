@@ -158,7 +158,7 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          file: "./deploy/${{ steps..service }}.Dockerfile"
+          file: "./deploy/${{ steps.variable-processor.outputs.language }}.Dockerfile"
           build-args: |
             BUILD_PROFILE=${{ inputs.build-profile }}
             BUILD_PATH=${{ inputs.build-path }}
