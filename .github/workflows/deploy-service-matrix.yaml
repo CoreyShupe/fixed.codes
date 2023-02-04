@@ -36,7 +36,6 @@ jobs:
   process_service_matrix:
     runs-on: ubuntu-latest
     name: Process the Service Matrix
-    secrets: inherit
     strategy:
       fail-fast: false
       matrix:
@@ -68,7 +67,6 @@ jobs:
       micro_services: ${{ steps.variable-processor.outputs.micro_service_output }}
     runs-on: ubuntu-latest
     name: Gather Matrix Variables
-    secrets: inherit
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -85,7 +83,6 @@ jobs:
     needs: [ gather_matrix_variables ]
     runs-on: ubuntu-latest
     name: Build Dependency Services
-    secrets: inherit
     strategy:
       fail-fast: false
       matrix:
@@ -126,7 +123,6 @@ jobs:
     name: Build and Deploy Micro Services
     needs: [ build_dependency_services, gather_matrix_variables ]
     runs-on: ubuntu-latest
-    secrets: inherit
     strategy:
       fail-fast: false
       matrix:
