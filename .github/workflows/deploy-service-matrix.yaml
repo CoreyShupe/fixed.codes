@@ -119,9 +119,9 @@ jobs:
           cache-to: type=gha,mode=max
 
   build_and_deploy_micro_services:
+    runs-on: ubuntu-latest
     name: Build and Deploy Micro Services
     needs: [ build_dependency_services, gather_matrix_variables ]
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
