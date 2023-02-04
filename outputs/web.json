@@ -1,0 +1,1 @@
+{"app_name":"web","language":"elm","services":["RUST_WORKSPACE"],"helm_chart":"basic_service","ingress_prefix":"","service_port":"8080","target_port":"http","service_type":"ClusterIP"}

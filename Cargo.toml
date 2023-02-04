@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "static-proxy",
     "web-api",
     "web_commons",
 ]

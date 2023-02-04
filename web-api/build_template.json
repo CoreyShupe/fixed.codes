@@ -1,0 +1,22 @@
+{
+  "app_name": "web-api",
+  "language": "rust",
+  "path_detections": [
+    {
+      "deps": [
+        "web-api/**",
+        "web_commons/**",
+        "deploy/rust.Dockerfile",
+        "services/rust_workspace.Dockerfile"
+      ]
+    }
+  ],
+  "services": [
+    "RUST_WORKSPACE"
+  ],
+  "helm_chart": "basic_service",
+  "ingress_prefix": "api.",
+  "service_port": "3000",
+  "target_port": "http",
+  "service_type": "ClusterIP"
+}
