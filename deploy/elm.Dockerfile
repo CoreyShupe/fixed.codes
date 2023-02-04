@@ -27,15 +27,25 @@ RUN apk add --update \
     vim \
     bash
 
-RUN mkdir /app
-
 ARG APP_NAME
 
-COPY $APP_NAME/assets /usr/share/nginx/html
-
-COPY --from=builder /app/elm_entry.js /usr/share/nginx/html/elm_entry.js
+COPY $APP_NAME/assets /app
+COPY --from=builder /app/elm_entry.js /app/elm_entry.js
 
 COPY $APP_NAME/nginx.conf /etc/nginx/nginx.conf
 
+RUN adduser -D app -s /sbin/nologin
+
+RUN chown -R app:app /app
+RUN chown -R app:app /var/cache/nginx
+RUN chown -R app:app /var/log/nginx
+RUN touch /var/run/nginx.pid
+RUN chown -R app:app /var/run/nginx.pid
+
+USER app
+
+RUN touch /var/log/nginx/error.log
+RUN touch /var/log/nginx/access.log
+
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["su-exec", "nginx", "nginx"]
+CMD ["nginx"]
