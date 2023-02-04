@@ -162,7 +162,7 @@ jobs:
             BUILD_PROFILE=${{ inputs.build-profile }}
             BUILD_PATH=${{ inputs.build-path }}
             APP_NAME=${{ matrix.service }}
-            RUST_WORKSPACE=${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/RUST_WORKSPACE:${{ steps.vars.outputs.sha_short }}
+            RUST_WORKSPACE=${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/rust_workspace:${{ steps.vars.outputs.sha_short }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

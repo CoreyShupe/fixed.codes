@@ -7,7 +7,7 @@
     "static-proxy/**",
     "deploy/elm.Dockerfile",
     "deploy/rust.Dockerfile",
-    "services/RUST_WORKSPACE.Dockerfile"
+    "services/rust_workspace.Dockerfile"
   ],
   "services": [
     "RUST_WORKSPACE"
