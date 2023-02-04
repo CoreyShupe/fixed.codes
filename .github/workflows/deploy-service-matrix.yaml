@@ -46,19 +46,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Variable Processor
-        id: variable-processor
-        run: ./scripts/process-service.sh ${{ matrix.app }} build_template.json >> $GITHUB_OUTPUT
+        run: ./scripts/process-service.sh ${{ matrix.app }} build_template.json
       - name: Dependency Change Detector
         uses: dorny/paths-filter@v2
         id: change-detector
         with:
-          filters: ${{ fromJson(steps.variable-processor.outputs.detections) }}
+          filters: ./outputs/${{ matrix.app }}.yaml
       - name: Upload Template Artifact
         if: inputs.build-profile == 'release' || steps.change-detector.outputs.deps == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: outputs
-          path: outputs/*.txt
+          path: outputs/*.json
 
   gather_matrix_variables:
     needs: [ process_service_matrix ]
