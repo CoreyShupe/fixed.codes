@@ -39,6 +39,8 @@ RUN apk add --update \
     bash
 
 ARG APP_NAME
+ARG BUILD_PROFILE
+ARG BUILD_PATH=${BUILD_PROFILE}
 
 COPY $APP_NAME/assets /app
 COPY --from=builder /app/elm_entry.js /app/elm_entry.js
