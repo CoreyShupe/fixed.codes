@@ -15,13 +15,13 @@ WORKDIR /app
 COPY $APP_NAME/elm.json .
 COPY $APP_NAME/src src
 
-RUN elm make src/Main.elm
+RUN elm make src/Main.elm --output /app/index.html --optimize
 
 FROM nginx
 
 RUN mkdir /app
 
-COPY --from=builder /app/index.js /app/index.js
+COPY --from=builder /app/index.html /app/index.html
 
 ARG APP_NAME
 
