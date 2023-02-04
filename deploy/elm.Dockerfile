@@ -42,7 +42,7 @@ ARG APP_NAME
 
 COPY $APP_NAME/assets /app
 COPY --from=builder /app/elm_entry.js /app/elm_entry.js
-COPY --from=proxy_builder /app/target/x86_64-unknown-linux-musl/${BUILD_PATH}/static_proxy /static_proxy
+COPY --from=proxy_builder /app/target/x86_64-unknown-linux-musl/${BUILD_PATH}/static-proxy /static_proxy
 
 RUN adduser -D app -s /sbin/nologin
 
@@ -50,4 +50,4 @@ RUN chown -R app:app /app
 RUN chown app:app /static_proxy
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["su-exec", "app", "/app/executable"]
+CMD ["su-exec", "app", "/static_proxy"]
