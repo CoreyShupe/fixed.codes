@@ -186,7 +186,7 @@ jobs:
           --set service.type=${{ steps.variable-processor.outputs.service_type }} \
           --set service.port=${{ steps.variable-processor.outputs.service_port }} \
           --set service.targetPort=${{ steps.variable-processor.outputs.target_port }} \
-          --set image.repository={{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.service }} \
+          --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.service }} \
           --set image.tag=${{ inputs.image-tag-prefix }}${{ steps.vars.outputs.sha_short }} \
           --set "ingress.enabled=true,ingress.hosts[0].host=${{ steps.variable-processor.outputs.ingress_prefix }}${{ inputs.k8s-ingress-suffix }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
           --set "ingress.tls[0].secretName=${{ inputs.k8s-ingress-tls-name }},ingress.tls[0].hosts[0]=${{ steps.variable-processor.outputs.ingress_prefix }}${{ inputs.k8s-ingress-suffix }}"
