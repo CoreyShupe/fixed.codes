@@ -1,17 +1,15 @@
 {
   "app_name": "web",
   "language": "elm",
-  "path_detections": [
-    {
-      "deps": [
-        "web/**",
-        "web_commons/**",
-        "static-proxy/**",
-        "deploy/elm.Dockerfile",
-        "services/rust_workspace.Dockerfile"
-      ]
-    }
-  ],
+  "path_detections": {
+    "deps": [
+      "web/**",
+      "web_commons/**",
+      "static-proxy/**",
+      "deploy/elm.Dockerfile",
+      "services/rust_workspace.Dockerfile"
+    ]
+  },
   "services": [
     "RUST_WORKSPACE"
   ],
