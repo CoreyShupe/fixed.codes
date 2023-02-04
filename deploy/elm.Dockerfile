@@ -15,6 +15,9 @@ FROM nginx
 RUN mkdir /app
 
 COPY --from=builder /app/index.js /app/index.js
+
+ARG APP_NAME
+
 COPY $APP_NAME/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx"]
