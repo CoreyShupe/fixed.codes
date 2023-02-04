@@ -3,6 +3,7 @@ FROM clux/muslrust:nightly AS chef
 USER root
 
 RUN cargo install cargo-chef
+
 WORKDIR /app
 
 FROM chef AS planner
