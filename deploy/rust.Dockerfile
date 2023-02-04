@@ -6,8 +6,8 @@ ARG BUILD_PROFILE
 ARG BUILD_PATH=${BUILD_PROFILE}
 COPY . .
 
-RUN cargo +nightly build --profile ${BUILD_PROFILE} -p ${APP_NAME}
-RUN chmod +x target/${BUILD_PATH}/${APP_NAME}
+RUN cargo +nightly build --target x86_64-unknown-linux-musl --profile ${BUILD_PROFILE} -p ${APP_NAME}
+RUN chmod +x target/x86_64-unknown-linux-musl/${BUILD_PATH}/${APP_NAME}
 
 FROM alpine AS runtime
 

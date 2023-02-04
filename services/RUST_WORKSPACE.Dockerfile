@@ -1,13 +1,6 @@
-FROM rust:1.67-alpine AS chef
-
-RUN rustup update nightly
-RUN rustup default nightly
-
-ARG CHEF_TAG=0.1.50
-
-RUN ((cat /etc/os-release | grep ID | grep alpine) && apk add --no-cache musl-dev || true) \
-    && cargo install cargo-chef --locked --version $CHEF_TAG \
-    && rm -rf $CARGO_HOME/registry/
+FROM clux/muslrust:nightly AS chef
+USER root
+RUN cargo install cargo-chef
 
 WORKDIR /app
 
@@ -22,9 +15,4 @@ COPY --from=planner /app/recipe.json recipe.json
 
 ARG BUILD_PROFILE
 
-RUN apk add --update \
-    openssl \
-    openssl-dev \
-    pkgconfig
-
-RUN cargo +nightly chef cook --profile $BUILD_PROFILE --recipe-path recipe.json
+RUN cargo +nightly chef cook --target x86_64-unknown-linux-musl --profile $BUILD_PROFILE --recipe-path recipe.json
