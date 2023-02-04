@@ -30,7 +30,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_BASE: ${{ github.repository }}
+  IMAGE_BASE: coreyshupe/fixed.codes
 
 jobs:
   process_service_matrix:
