@@ -1,7 +1,8 @@
 FROM alpine as builder
 
 RUN wget -O - 'https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz' \
-    | gunzip -c >/usr/local/bin/elm
+    | gunzip -c >/usr/local/bin/elm \
+    && chmod +x /usr/local/bin/elm
 
 RUN apk update
 RUN apk add --update nodejs npm
