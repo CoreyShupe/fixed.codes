@@ -10,7 +10,7 @@
     "services/rust_workspace.Dockerfile"
   ],
   "services": [
-    "RUST_WORKSPACE"
+    "rust_workspace"
   ],
   "helm_chart": "basic_service",
   "ingress_prefix": "",
