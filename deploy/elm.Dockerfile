@@ -17,7 +17,15 @@ COPY $APP_NAME/src src
 
 RUN elm make src/Main.elm --output /app/index.html --optimize
 
-FROM nginx
+FROM nginx:alpine
+
+RUN apk update && apk upgrade
+RUN apk add --update \
+    su-exec \
+    tini \
+    curl \
+    vim \
+    bash
 
 RUN mkdir /app
 
@@ -27,4 +35,9 @@ ARG APP_NAME
 
 COPY $APP_NAME/nginx.conf /etc/nginx/nginx.conf
 
-CMD ["nginx"]
+
+RUN adduser -D app -s /sbin/nologin
+RUN chown -R app:app /app/
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["su-exec", "app", "nginx"]
