@@ -41,7 +41,7 @@ jobs:
             language: "elm"
             ingress-prefix: ""
             service-type: "ClusterIP"
-            service-port: 8000
+            service-port: 8080
             targetPort: http
             dependencies: |
               deps:

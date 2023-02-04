@@ -15,7 +15,7 @@ WORKDIR /app
 COPY $APP_NAME/elm.json .
 COPY $APP_NAME/src src
 
-RUN elm make src/Main.elm --output /app/index.html --optimize
+RUN elm make src/Main.elm --output /app/elm_entry.js --optimize
 
 FROM nginx:alpine
 
@@ -29,15 +29,13 @@ RUN apk add --update \
 
 RUN mkdir /app
 
-COPY --from=builder /app/index.html /app/index.html
-
 ARG APP_NAME
+
+COPY $APP_NAME/assets /usr/share/nginx/html
+
+COPY --from=builder /app/elm_entry.js /usr/share/nginx/html/elm_entry.js
 
 COPY $APP_NAME/nginx.conf /etc/nginx/nginx.conf
 
-
-RUN adduser -D app -s /sbin/nologin
-RUN chown -R app:app /app/
-
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["su-exec", "app", "nginx"]
+CMD ["su-exec", "nginx", "nginx"]
