@@ -6,8 +6,8 @@ ARG BUILD_PATH=${BUILD_PROFILE}
 
 COPY . .
 
-RUN cargo +nightly build --profile ${BUILD_PROFILE} -p static-proxy
-RUN chmod +x target/${BUILD_PATH}/static-proxy
+RUN cargo +nightly build --target x86_64-unknown-linux-musl --profile ${BUILD_PROFILE} -p static-proxy
+RUN chmod +x target/x86_64-unknown-linux-musl/${BUILD_PATH}/static-proxy
 
 FROM alpine as builder
 
@@ -42,7 +42,7 @@ ARG APP_NAME
 
 COPY $APP_NAME/assets /app
 COPY --from=builder /app/elm_entry.js /app/elm_entry.js
-COPY --from=proxy_builder /app/target/${BUILD_PATH}/static_proxy /static_proxy
+COPY --from=proxy_builder /app/target/x86_64-unknown-linux-musl/${BUILD_PATH}/static_proxy /static_proxy
 
 RUN adduser -D app -s /sbin/nologin
 

@@ -29,7 +29,7 @@ ARG APP_NAME
 ARG BUILD_PROFILE
 ARG BUILD_PATH=${BUILD_PROFILE}
 
-COPY --from=builder /app/target/${BUILD_PATH}/${APP_NAME} /app/executable
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/${BUILD_PATH}/${APP_NAME} /app/executable
 
 RUN adduser -D app -s /sbin/nologin
 RUN chown -R app:app /app/
