@@ -36,43 +36,43 @@ jobs:
       fail-fast: false
       matrix:
         app:
-          #          - app-name: "web"
-          #            helm-chart: "basic_service"
-          #            language: "nuxt"
-          #            ingress-prefix: ""
-          #            service-type: "ClusterIP"
-          #            service-port: 3000
-          #            targetPort: http
-          #            dependencies: |
-          #              deps:
-          #                - "web/**"
-          #                - "deploy/nuxt.Dockerfile"
-          #          - app-name: "web-api"
-          #            helm-chart: "basic_service"
-          #            language: "rust"
-          #            ingress-prefix: "api."
-          #            service-type: "ClusterIP"
-          #            service-port: 3000
-          #            targetPort: http
-          #            dependencies: |
-          #              deps:
-          #                - "web-api/**"
-          #                - "web_commons/**"
-          #                - "deploy/rust.Dockerfile"
-          - app-name: "mc-server"
+          - app-name: "web"
             helm-chart: "basic_service"
-            language: "rust"
-            ingress-prefix: "mc."
-            service-type: "LoadBalancer"
-            service-port: 25565
-            targetPort: 25565
+            language: "elm"
+            ingress-prefix: ""
+            service-type: "ClusterIP"
+            service-port: 8000
+            targetPort: http
             dependencies: |
               deps:
-                - "mc-server/**"
+                - "web/**"
+                - "deploy/elm.Dockerfile"
+          - app-name: "web-api"
+            helm-chart: "basic_service"
+            language: "rust"
+            ingress-prefix: "api."
+            service-type: "ClusterIP"
+            service-port: 3000
+            targetPort: http
+            dependencies: |
+              deps:
+                - "web-api/**"
                 - "web_commons/**"
                 - "deploy/rust.Dockerfile"
-                - "Cargo.lock"
-                - "Cargo.toml"
+    #          - app-name: "mc-server"
+    #            helm-chart: "basic_service"
+    #            language: "rust"
+    #            ingress-prefix: "mc."
+    #            service-type: "LoadBalancer"
+    #            service-port: 25565
+    #            targetPort: 25565
+    #            dependencies: |
+    #              deps:
+    #                - "mc-server/**"
+    #                - "web_commons/**"
+    #                - "deploy/rust.Dockerfile"
+    #                - "Cargo.lock"
+    #                - "Cargo.toml"
     uses: "./.github/workflows/generic.yaml"
     with:
       app-name: ${{ matrix.app.app-name }}
