@@ -41,6 +41,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Prepare Outputs
+        run: mkdir -p outputs
+      - name: Upload Base Outputs Directory
+        uses: actions/upload-artifact@v3
+        with:
+          name: outputs
+          path: outputs/
       - name: Variable Processor
         id: variable-processor
         run: |
