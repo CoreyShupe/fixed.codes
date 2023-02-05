@@ -41,13 +41,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Prepare Outputs
-        run: mkdir -p outputs
-      - name: Upload Base Outputs Directory
-        uses: actions/upload-artifact@v3
-        with:
-          name: outputs
-          path: outputs/
       - name: Variable Processor
         id: variable-processor
         run: |
@@ -58,6 +51,8 @@ jobs:
     needs: [ detect_configured_services ]
     runs-on: ubuntu-latest
     name: Process the Service Matrix
+    outputs:
+      any_configured: ${{ steps.variable-processor.outputs.any_configured }}
     strategy:
       fail-fast: false
       matrix:
@@ -78,9 +73,14 @@ jobs:
         with:
           name: outputs
           path: outputs/*.json
+      - name: Mark Configured
+        if: inputs.build-profile == 'release' || steps.change-detector.outputs.deps == 'true'
+        run: |
+          echo "any_configured=true" >> $GITHUB_OUTPUT
 
   gather_matrix_variables:
     needs: [ process_service_matrix ]
+    if: needs.process_service_matrix.outputs.any_configured == 'true'
     outputs:
       dep_services: ${{ steps.variable-processor.outputs.service_output }}
       micro_services: ${{ steps.variable-processor.outputs.micro_service_output }}
