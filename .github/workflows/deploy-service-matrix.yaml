@@ -84,7 +84,6 @@ jobs:
 
   gather_matrix_variables:
     needs: [ process_service_matrix ]
-    if: needs.process_service_matrix.outputs.any_configured == 'true'
     outputs:
       dep_services: ${{ steps.variable-processor.outputs.service_output }}
       micro_services: ${{ steps.variable-processor.outputs.micro_service_output }}
