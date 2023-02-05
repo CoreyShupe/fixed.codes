@@ -1,0 +1,7 @@
+deps:
+  - "web/**"
+  - "web_commons/**"
+  - "static-proxy/**"
+  - "deploy/elm.Dockerfile"
+  - "deploy/rust.Dockerfile"
+  - "services/rust_workspace.Dockerfile"

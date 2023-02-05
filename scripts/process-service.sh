@@ -9,7 +9,8 @@ jq -c "del(.path_detections)" $1/$2 > outputs/$1.json
 
 touch outputs/$1.yaml
 echo "deps:" > outputs/$1.yaml
-for detection in $(jq -r ".path_detections[]" $1/$2); do
+for detection in $(jq -r ".path_detections[]" $1/$2 | sed -e 's/*/\\*/g'); do
+  detection=$(echo $detection | sed  -e 's/\\//g')
   echo "  - \"$detection\"" >> outputs/$1.yaml
 done
 
