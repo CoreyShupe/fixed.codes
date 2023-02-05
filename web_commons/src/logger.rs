@@ -8,8 +8,8 @@ use log::LevelFilter;
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 pub struct LoggerOptions {
-    log_level: LevelFilter,
-    log_file: Option<PathBuf>,
+    pub log_level: LevelFilter,
+    pub log_file: Option<PathBuf>,
 }
 
 impl Default for LoggerOptions {

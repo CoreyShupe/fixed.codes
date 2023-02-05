@@ -1,0 +1,17 @@
+{
+  "app_name": "web",
+  "language": "elm",
+  "path_detections": [
+    "web_commons/**",
+    "static-proxy/**",
+    "deploy/rust.Dockerfile"
+  ],
+  "services": [
+    "rust_workspace"
+  ],
+  "helm_chart": "basic_service",
+  "ingress_prefix": "",
+  "service_port": "8080",
+  "target_port": "http",
+  "service_type": "ClusterIP"
+}

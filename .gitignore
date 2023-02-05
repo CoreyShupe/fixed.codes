@@ -30,3 +30,5 @@ output.log
 node_modules
 
 .vite
+
+/outputs/

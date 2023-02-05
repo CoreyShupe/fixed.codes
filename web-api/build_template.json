@@ -1,0 +1,15 @@
+{
+  "app_name": "web-api",
+  "language": "rust",
+  "path_detections": [
+    "web_commons/**"
+  ],
+  "services": [
+    "rust_workspace"
+  ],
+  "helm_chart": "basic_service",
+  "ingress_prefix": "api.",
+  "service_port": "3000",
+  "target_port": "http",
+  "service_type": "ClusterIP"
+}

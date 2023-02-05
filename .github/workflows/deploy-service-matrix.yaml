@@ -28,39 +28,203 @@ on:
         required: true
         type: string
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_BASE: coreyshupe/fixed.codes
+
 jobs:
-  build_deploy_matrix:
-    name: Build and Deploy Service Matrix
-    secrets: inherit
+  detect_configured_services:
+    runs-on: ubuntu-latest
+    name: Detect Configured Services
+    outputs:
+      configured_services: ${{ steps.variable-processor.outputs.services }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Variable Processor
+        id: variable-processor
+        run: |
+          echo -n "services=" >> $GITHUB_OUTPUT
+          ./scripts/initial-service-constructor.sh >> $GITHUB_OUTPUT
+      - name: Create temp artifact
+        run: |
+          mkdir -p outputs/
+          touch outputs/temp.json
+          echo -n "[]" > outputs/temp.json
+      - name: Upload Template Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: outputs
+          path: outputs/temp.json
+
+  process_service_matrix:
+    needs: [ detect_configured_services ]
+    runs-on: ubuntu-latest
+    name: Process the Service Matrix
     strategy:
+      fail-fast: false
       matrix:
-        app:
-          - app-name: "web"
-            helm-chart: "basic_service"
-            language: "nuxt"
-            ingress-prefix: ""
-            dependencies: |
-              deps:
-                - "web/**"
-                - "deploy/nuxt.Dockerfile"
-          - app-name: "web-api"
-            helm-chart: "basic_service"
-            language: "rust"
-            ingress-prefix: "api."
-            dependencies: |
-              deps:
-                - "web-api/**"
-                - "web_commons/**"
-                - "deploy/rust.Dockerfile"
-    uses: "./.github/workflows/generic.yaml"
-    with:
-      app-name: ${{ matrix.app.app-name }}
-      app-language: ${{ matrix.app.language }}
-      app-dependencies: ${{ matrix.app.dependencies }}
-      app-helm-chart: ${{ matrix.app.helm-chart }}
-      build-path: ${{ inputs.build-path }}
-      build-profile: ${{ inputs.build-profile }}
-      tag-prefix: ${{ inputs.tag-prefix }}
-      k8s-deployment-ns: ${{ inputs.k8s-deployment-ns }}
-      k8s-ingress-name: ${{ matrix.app.ingress-prefix }}${{ inputs.k8s-ingress-suffix }}
-      k8s-ingress-tls-name: ${{ inputs.k8s-ingress-tls-name }}
+        app: ${{ fromJson(needs.detect_configured_services.outputs.configured_services) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Variable Processor
+        run: ./scripts/process-service.sh ${{ matrix.app }} build_template.json
+      - name: Dependency Change Detector
+        uses: dorny/paths-filter@v2
+        id: change-detector
+        with:
+          filters: ./outputs/${{ matrix.app }}.yaml
+      - name: Upload Template Artifact
+        if: inputs.build-profile == 'release' || steps.change-detector.outputs.deps == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: outputs
+          path: outputs/*.json
+
+  gather_matrix_variables:
+    needs: [ process_service_matrix ]
+    outputs:
+      dep_services: ${{ steps.variable-processor.outputs.service_output }}
+      micro_services: ${{ steps.variable-processor.outputs.micro_service_output }}
+    runs-on: ubuntu-latest
+    name: Gather Matrix Variables
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download Template Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: outputs
+          path: outputs
+      - name: Remove Temp
+        run: rm outputs/temp.json
+      - name: Variable Processor
+        id: variable-processor
+        run: ./scripts/build-service-diagram.sh >> $GITHUB_OUTPUT
+
+  build_dependency_services:
+    needs: [ gather_matrix_variables ]
+    runs-on: ubuntu-latest
+    name: Build Dependency Services
+    if: needs.gather_matrix_variables.outputs.dep_services != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.gather_matrix_variables.outputs.dep_services) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.service }}
+          tags: |
+            type=sha,enable=true,format=short,prefix=${{ inputs.tag-prefix }},suffix=
+      - name: Build and push image
+        id: docker_build_push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          file: "./services/${{ matrix.service }}.Dockerfile"
+          build-args: |
+            BUILD_PROFILE=${{ inputs.build-profile }}
+            BUILD_PATH=${{ inputs.build-path }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build_and_deploy_micro_services:
+    needs: [ build_dependency_services, gather_matrix_variables ]
+    if: needs.gather_matrix_variables.outputs.micro_services != '[]'
+    runs-on: ubuntu-latest
+    name: Build and Deploy Micro Services
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.gather_matrix_variables.outputs.micro_services) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Process Template Variables
+        id: variable-processor
+        run: ./scripts/process-service-variables.sh ${{ matrix.service }}/build_template.json >> $GITHUB_OUTPUT
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.service }}
+          tags: |
+            type=sha,enable=true,format=short,prefix=${{ inputs.tag-prefix }},suffix=
+      - name: Set Git Outputs
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Build and push image
+        id: docker_build_push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          file: "./deploy/${{ steps.variable-processor.outputs.language }}.Dockerfile"
+          build-args: |
+            BUILD_PROFILE=${{ inputs.build-profile }}
+            BUILD_PATH=${{ inputs.build-path }}
+            APP_NAME=${{ matrix.service }}
+            RUST_WORKSPACE=${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/rust_workspace:${{ inputs.tag-prefix }}${{ steps.vars.outputs.sha_short }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: latest
+          token: ${{ secrets.GITHUB_TOKEN }}
+        id: install
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_K8S_CLUSTER }}
+      - name: Deploy Service to Kubernetes
+        run: |-
+          helm upgrade --install --atomic --wait --timeout 600s --create-namespace ${{ matrix.service }} deploy/charts/${{ steps.variable-processor.outputs.helm_chart }} \
+          --namespace ${{ inputs.k8s-deployment-ns }} \
+          --set fullnameOverride=${{ matrix.service }} \
+          --set service.type=${{ steps.variable-processor.outputs.service_type }} \
+          --set service.port=${{ steps.variable-processor.outputs.service_port }} \
+          --set service.targetPort=${{ steps.variable-processor.outputs.target_port }} \
+          --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.service }} \
+          --set image.tag=${{ inputs.tag-prefix }}${{ steps.vars.outputs.sha_short }} \
+          --set "ingress.enabled=true,ingress.hosts[0].host=${{ steps.variable-processor.outputs.ingress_prefix }}${{ inputs.k8s-ingress-suffix }},ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
+          --set "ingress.tls[0].secretName=${{ inputs.k8s-ingress-tls-name }},ingress.tls[0].hosts[0]=${{ steps.variable-processor.outputs.ingress_prefix }}${{ inputs.k8s-ingress-suffix }}"
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [ gather_matrix_variables ]
+    name: Cleanup Artifacts
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Delete Declaration Outputs
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: outputs
