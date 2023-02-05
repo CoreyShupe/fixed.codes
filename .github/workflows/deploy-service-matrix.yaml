@@ -33,15 +33,28 @@ env:
   IMAGE_BASE: coreyshupe/fixed.codes
 
 jobs:
+  detect_configured_services:
+    runs-on: ubuntu-latest
+    name: Detect Configured Services
+    outputs:
+      configured_services: ${{ steps.variable-processor.outputs.services }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Variable Processor
+        id: variable-processor
+        run: |
+          echo -n "services=" >> $GITHUB_OUTPUT
+          ./scripts/initial-service-constructor.sh >> $GITHUB_OUTPUT
+
   process_service_matrix:
+    needs: [ detect_configured_services ]
     runs-on: ubuntu-latest
     name: Process the Service Matrix
     strategy:
       fail-fast: false
       matrix:
-        app:
-          - 'web'
-          - 'web-api'
+        app: ${{ fromJson(needs.detect_configured_services.outputs.configured_services) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
