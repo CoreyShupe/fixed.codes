@@ -21,18 +21,18 @@ body {
     align-items: center;
 }
 
-.nav-item button:not(:hover) {
-    background-color: black;
+.nav-item button {
     border: 2px solid #00FF0A;
     border-radius: 60px;
     color: black;
 }
 
+.nav-item button:not(:hover) {
+    background-color: black;
+}
+
 .nav-item button:hover {
     background-color: #1c561d;
-    border: 2px solid #00FF0A;
-    border-radius: 60px;
-    color: black;
 }
 
 .nav-item button div {

@@ -12,3 +12,6 @@ echo "deps:" > outputs/$1.yaml
 for detection in $(jq -r ".path_detections[]" $1/$2); do
   echo "  - \"$detection\"" >> outputs/$1.yaml
 done
+
+echo "Detections Processing:"
+cat outputs/$1.yaml
