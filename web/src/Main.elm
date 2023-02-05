@@ -1,9 +1,10 @@
 module Main exposing (..)
 
 import Browser exposing (Document)
-import Browser.Navigation as Nav
-import Html exposing (div, text)
-import Url
+import Browser.Navigation exposing (Key)
+import Html exposing (button, div, li, p, section, text, ul)
+import Html.Attributes exposing (class)
+import Url exposing (Url)
 
 
 main : Program () Model Msg
@@ -22,14 +23,14 @@ type alias Model =
     {}
 
 
-init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init : () -> Url -> Key -> ( Model, Cmd Msg )
 init _ _ _ =
     ( {}, Cmd.none )
 
 
 type Msg
     = LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
+    | UrlChanged Url
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -51,7 +52,35 @@ view : Model -> Document Msg
 view _ =
     { title = "FiXed Codes"
     , body =
-        [ div []
-            []
+        [ section [ class "nav-box" ]
+            [ div [ class "nav-item" ]
+                [ button []
+                    [ div []
+                        [ text "Personal Projects"
+                        ]
+                    ]
+                ]
+            , div [ class "nav-item" ]
+                [ button []
+                    [ div []
+                        [ text "Introduction"
+                        ]
+                    ]
+                ]
+            , div [ class "nav-item" ]
+                [ button []
+                    [ div []
+                        [ text "Wiki Postings"
+                        ]
+                    ]
+                ]
+            , div [ class "nav-item" ]
+                [ button []
+                    [ div []
+                        [ text "Useful Resources"
+                        ]
+                    ]
+                ]
+            ]
         ]
     }

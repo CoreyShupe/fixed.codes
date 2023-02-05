@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <title>FiXed Codes</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="styles.css" rel="stylesheet"/>
 </head>
 
-<body>
+<body style="width: 100%; height: 100%">
 <div id="elm-app"></div>
+<!--suppress HtmlUnknownTarget -->
 <script src="elm_entry.js"></script>
+<!--suppress JSUnresolvedVariable, JSUnresolvedFunction, JSUnusedGlobalSymbols -->
 <script>
     const app = Elm.Main.init({
         node: document.getElementById("elm-app")

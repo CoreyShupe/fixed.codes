@@ -1,0 +1,42 @@
+* {
+    margin: 0 0;
+    padding: 0 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+body {
+    background-color: black;
+}
+
+.nav-box {
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.nav-item button:not(:hover) {
+    background-color: black;
+    border: 2px solid #00FF0A;
+    border-radius: 60px;
+    color: black;
+}
+
+.nav-item button:hover {
+    background-color: #1c561d;
+    border: 2px solid #00FF0A;
+    border-radius: 60px;
+    color: black;
+}
+
+.nav-item button div {
+    font-size: xx-large;
+    color: #a97171;
+    padding: 15px 15px;
+}
