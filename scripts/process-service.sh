@@ -4,6 +4,7 @@
 # and removing/checking the path detections as a result
 
 mkdir -p outputs
+rm -rf outputs/*
 
 jq -c "del(.path_detections)" $1/$2 > outputs/$1.json
 
