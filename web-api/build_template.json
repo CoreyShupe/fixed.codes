@@ -2,10 +2,7 @@
   "app_name": "web-api",
   "language": "rust",
   "path_detections": [
-    "web-api/**",
-    "web_commons/**",
-    "deploy/rust.Dockerfile",
-    "services/rust_workspace.Dockerfile"
+    "web_commons/**"
   ],
   "services": [
     "rust_workspace"

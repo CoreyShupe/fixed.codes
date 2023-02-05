@@ -2,12 +2,9 @@
   "app_name": "web",
   "language": "elm",
   "path_detections": [
-    "web/**",
     "web_commons/**",
     "static-proxy/**",
-    "deploy/elm.Dockerfile",
-    "deploy/rust.Dockerfile",
-    "services/rust_workspace.Dockerfile"
+    "deploy/rust.Dockerfile"
   ],
   "services": [
     "rust_workspace"
