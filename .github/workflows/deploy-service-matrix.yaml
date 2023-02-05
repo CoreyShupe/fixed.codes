@@ -46,13 +46,21 @@ jobs:
         run: |
           echo -n "services=" >> $GITHUB_OUTPUT
           ./scripts/initial-service-constructor.sh >> $GITHUB_OUTPUT
+      - name: Create temp artifact
+        run: |
+          mkdir -p outputs/
+          touch outputs/temp.json
+          echo -n "[]" > outputs/temp.json
+      - name: Upload Template Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: outputs
+          path: outputs/temp.json
 
   process_service_matrix:
     needs: [ detect_configured_services ]
     runs-on: ubuntu-latest
     name: Process the Service Matrix
-    outputs:
-      any_configured: ${{ steps.variable-processor.outputs.any_configured }}
     strategy:
       fail-fast: false
       matrix:
@@ -73,10 +81,6 @@ jobs:
         with:
           name: outputs
           path: outputs/*.json
-      - name: Mark Configured
-        if: inputs.build-profile == 'release' || steps.change-detector.outputs.deps == 'true'
-        run: |
-          echo "any_configured=true" >> $GITHUB_OUTPUT
 
   gather_matrix_variables:
     needs: [ process_service_matrix ]
@@ -94,6 +98,8 @@ jobs:
         with:
           name: outputs
           path: outputs
+      - name: Remove Temp
+        run: rm outputs/temp.json
       - name: Variable Processor
         id: variable-processor
         run: ./scripts/build-service-diagram.sh >> $GITHUB_OUTPUT

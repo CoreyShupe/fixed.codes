@@ -67,7 +67,7 @@ subscriptions _ =
 
 view : Model -> Document Msg
 view model =
-    { title = "FiXed Codes"
+    { title = "/fixed.codes/"
     , body =
         case model.currentPage of
             Home ->
