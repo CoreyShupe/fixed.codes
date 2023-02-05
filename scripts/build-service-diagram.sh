@@ -24,9 +24,9 @@ for filename in outputs/*.json; do
   MICRO_SERVICE_OUTPUT=$(jq -c --arg runner "$runner" '. + [$runner]' <<< $MICRO_SERVICE_OUTPUT)
 done
 
-SERVICE_OUTPUT=$(echo $SERVICE_OUTPUT | jq -c 'unique')
+SERVICE_OUTPUT=$(jq -c 'unique' <<< $SERVICE_OUTPUT)
 
 echo -n service_output=
-echo $SERVICE_OUTPUT | jq -c .
+jq -c . <<< $SERVICE_OUTPUT
 echo -n micro_service_output=
-echo $MICRO_SERVICE_OUTPUT | jq -c .
+jq -c . <<< $MICRO_SERVICE_OUTPUT
