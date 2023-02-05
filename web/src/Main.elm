@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser exposing (Document)
 import Browser.Navigation as Nav exposing (Key)
-import Html exposing (Html, button, div, section, text)
+import Html exposing (Html, button, div, section, span, text)
 import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)
 import RouterParser exposing (Route(..), resolveUrl)
@@ -80,17 +80,37 @@ view model =
                 ]
 
             PersonalProjects ->
-                [ placeholder "Personal Projects" ]
+                [ goHome
+                , placeholder "Personal Projects"
+                ]
 
             Introduction ->
-                [ placeholder "Introduction" ]
+                [ goHome
+                , placeholder "Introduction"
+                ]
 
             WikiPostings ->
-                [ placeholder "Wiki Postings" ]
+                [ goHome
+                , placeholder "Wiki Postings"
+                ]
 
             UsefulResources ->
-                [ placeholder "Useful Resources" ]
+                [ goHome
+                , placeholder "Useful Resources"
+                ]
     }
+
+
+goHome : Html Msg
+goHome =
+    div [ class "nav-item" ]
+        [ button [ onClick (GotoRoute "/"), style "margin" "12px 12px" ]
+            [ div [ style "font-size" "20px" ]
+                [ material "home"
+                , span [] [ text "Home" ]
+                ]
+            ]
+        ]
 
 
 placeholder : String -> Html Msg
@@ -99,7 +119,7 @@ placeholder name =
         [ style "color" "white"
         , style "font-size" "xx-large"
         ]
-        [ text name ]
+        [ text (name ++ " currently in progress") ]
 
 
 navItem : String -> String -> Html Msg
@@ -111,3 +131,8 @@ navItem friendlyName link =
                 ]
             ]
         ]
+
+
+material : String -> Html Msg
+material name =
+    span [ class "material-icons" ] [ text name ]
