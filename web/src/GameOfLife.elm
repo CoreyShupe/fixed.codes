@@ -11,7 +11,7 @@ import Random
 
 pixelsPerSquare : Float
 pixelsPerSquare =
-    12
+    8
 
 
 type alias GameOfLife =
@@ -40,7 +40,7 @@ insert pageX pageY model =
             cellY =
                 floor (toFloat pageY / pixelsPerSquare)
         in
-        if List.member ( pageX, pageY ) model.populatedCells then
+        if List.member ( cellX, cellY ) model.populatedCells then
             model
 
         else
@@ -102,7 +102,7 @@ update model msg =
                         List.indexedMap (\idx v -> ( idx, v )) randoms
 
                     chosen =
-                        List.filter (\( _, x ) -> x < 0.22) firstMap
+                        List.filter (\( _, x ) -> x < 0.12) firstMap
 
                     mapped =
                         List.map

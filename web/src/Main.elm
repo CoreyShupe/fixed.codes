@@ -127,7 +127,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     batch
         [ Browser.Events.onResize WidthHeight
-        , Time.every 333 (\_ -> Tick)
+        , Time.every 665 (\_ -> Tick)
         , Browser.Events.onClick
             (Decode.map
                 GenericClick
