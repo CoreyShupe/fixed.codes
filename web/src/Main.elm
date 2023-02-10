@@ -5,6 +5,7 @@ import Browser.Dom exposing (Viewport, getViewport)
 import Browser.Events
 import Browser.Navigation as Nav exposing (Key)
 import GameOfLife exposing (GameOfLife, randomFill)
+import Json.Decode as Decode
 import Platform.Sub exposing (batch)
 import SystemRouter exposing (..)
 import Task
@@ -43,6 +44,10 @@ init _ url key =
     )
 
 
+type alias ClickEvent =
+    { pageX : Int, pageY : Int }
+
+
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url
@@ -51,6 +56,7 @@ type Msg
     | Tick
     | GOL GameOfLife.GameOfLifeMsg
     | GetViewport Viewport
+    | GenericClick ClickEvent
 
 
 update :
@@ -85,10 +91,18 @@ update msg model =
                 )
 
         Tick ->
-            ( { model | gameOfLife = GameOfLife.calculateNextGeneration model.gameOfLife }, Cmd.none )
+            ( { model
+                | gameOfLife = GameOfLife.calculateNextGeneration model.gameOfLife
+              }
+            , Cmd.none
+            )
 
         GOL message ->
-            ( { model | gameOfLife = GameOfLife.update model.gameOfLife message }, Cmd.none )
+            ( { model
+                | gameOfLife = GameOfLife.update model.gameOfLife message
+              }
+            , Cmd.none
+            )
 
         GetViewport viewPort ->
             mapFirst
@@ -101,12 +115,27 @@ update msg model =
                     GOL
                 )
 
+        GenericClick clickEvent ->
+            ( { model
+                | gameOfLife = GameOfLife.insert clickEvent.pageX clickEvent.pageY model.gameOfLife
+              }
+            , Cmd.none
+            )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     batch
         [ Browser.Events.onResize WidthHeight
-        , Time.every 1000 (\_ -> Tick)
+        , Time.every 333 (\_ -> Tick)
+        , Browser.Events.onClick
+            (Decode.map
+                GenericClick
+                (Decode.map2 ClickEvent
+                    (Decode.field "pageX" Decode.int)
+                    (Decode.field "pageY" Decode.int)
+                )
+            )
         ]
 
 

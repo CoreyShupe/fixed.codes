@@ -21,6 +21,22 @@ type alias GameOfLife =
     }
 
 
+insert : Int -> Int -> GameOfLife -> GameOfLife
+insert pageX pageY model =
+    let
+        cellX =
+            floor (toFloat pageX / pixelsPerSquare)
+
+        cellY =
+            floor (toFloat pageY / pixelsPerSquare)
+    in
+    if List.member ( pageX, pageY ) model.populatedCells then
+        model
+
+    else
+        { model | populatedCells = ( cellX, cellY ) :: model.populatedCells }
+
+
 cellWidth : GameOfLife -> Int
 cellWidth gol =
     round (toFloat gol.width / pixelsPerSquare)
@@ -73,7 +89,7 @@ update model msg =
                         List.indexedMap (\idx v -> ( idx, v )) randoms
 
                     chosen =
-                        List.filter (\( _, x ) -> x < 0.1) firstMap
+                        List.filter (\( _, x ) -> x < 0.22) firstMap
 
                     mapped =
                         List.map
