@@ -235,10 +235,10 @@ processNeighborDictionary cell width height currentDict =
                             Seen 0
 
                         Unseen count ->
-                            Seen (1 + count)
+                            Seen count
 
                         Seen count ->
-                            Seen (1 + count)
+                            Seen count
                 )
                 cell
                 currentDict
