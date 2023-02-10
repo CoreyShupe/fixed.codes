@@ -231,6 +231,9 @@ processNeighborDictionary cell width height currentDict =
             cellUpdate
                 (\currentState ->
                     case currentState of
+                        Unseen 0 ->
+                            Seen 0
+
                         Unseen count ->
                             Seen (1 + count)
 
