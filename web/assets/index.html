@@ -5,13 +5,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link href="styles.css" rel="stylesheet"/>
+    <link href="/styles.css" rel="stylesheet"/>
 </head>
 
-<body style="width: 100%; height: 100%">
-<div id="elm-app"></div>
+<body>
+<main id="elm-app"></main>
 <!--suppress HtmlUnknownTarget -->
-<script src="elm_entry.js"></script>
+<script src="/elm_entry.js"></script>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://unpkg.com/elm-canvas@2.2/elm-canvas.js"></script>
 <!--suppress JSUnresolvedVariable, JSUnresolvedFunction, JSUnusedGlobalSymbols -->
 <script>
     const app = Elm.Main.init({

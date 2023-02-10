@@ -1,12 +1,17 @@
 module Main exposing (..)
 
 import Browser exposing (Document)
+import Browser.Dom exposing (Viewport, getViewport)
+import Browser.Events
 import Browser.Navigation as Nav exposing (Key)
-import Html exposing (Html, button, div, section, span, text)
-import Html.Attributes exposing (class, style)
-import Html.Events exposing (onClick)
-import RouterParser exposing (Route(..), resolveUrl)
+import GameOfLife exposing (GameOfLife, randomFill)
+import Platform.Sub exposing (batch)
+import SystemRouter exposing (..)
+import Task
+import Time
+import Tuple exposing (mapFirst)
 import Url exposing (Url)
+import Url.Parser exposing ((</>), Parser, map, oneOf, s)
 
 
 main : Program () Model Msg
@@ -23,28 +28,41 @@ main =
 
 type alias Model =
     { key : Key
-    , currentPage : Route
+    , gameOfLife : GameOfLife
+    , pageState : PageState
     }
 
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init _ url key =
-    ( { currentPage = resolveUrl url
+    ( { pageState = resolveUrl url
+      , gameOfLife = GameOfLife.init 0 0
       , key = key
       }
-    , Cmd.none
+    , Task.perform GetViewport getViewport
     )
 
 
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url
-    | GotoRoute String
+    | Navigation SystemRouter.NavMsg
+    | WidthHeight Int Int
+    | Tick
+    | GOL GameOfLife.GameOfLifeMsg
+    | GetViewport Viewport
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update :
+    Msg
+    -> Model
+    -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
+    let
+        msg2 =
+            Debug.log "Incoming message!" msg
+    in
+    case msg2 of
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
@@ -54,85 +72,69 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | currentPage = resolveUrl url }, Cmd.none )
+            ( { model | pageState = resolveUrl url }, Cmd.none )
 
-        GotoRoute string ->
+        Navigation (GotoRoute string) ->
             ( model, Nav.pushUrl model.key string )
+
+        WidthHeight width height ->
+            mapFirst
+                (\gol -> { model | gameOfLife = gol })
+                (randomFill
+                    (GameOfLife.init
+                        width
+                        height
+                    )
+                    GOL
+                )
+
+        Tick ->
+            ( { model | gameOfLife = GameOfLife.calculateNextGeneration model.gameOfLife }, Cmd.none )
+
+        GOL message ->
+            ( { model | gameOfLife = GameOfLife.update model.gameOfLife message }, Cmd.none )
+
+        GetViewport viewPort ->
+            mapFirst
+                (\gol -> { model | gameOfLife = gol })
+                (randomFill
+                    (GameOfLife.init
+                        (round viewPort.viewport.width)
+                        (round viewPort.viewport.height)
+                    )
+                    GOL
+                )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    batch
+        [ Browser.Events.onResize WidthHeight
+        , Time.every 1000 (\_ -> Tick)
+        ]
 
 
 view : Model -> Document Msg
 view model =
     { title = "/fixed.codes/"
     , body =
-        case model.currentPage of
-            Home ->
-                [ section [ class "nav-box" ]
-                    [ navItem "Personal Projects" "/personal-projects"
-                    , navItem "Introduction" "/introduction"
-                    , navItem "Wiki Postings" "/wiki-postings"
-                    , navItem "Useful Resources" "/useful-resources"
-                    ]
-                ]
-
-            PersonalProjects ->
-                [ goHome
-                , placeholder "Personal Projects"
-                ]
-
-            Introduction ->
-                [ goHome
-                , placeholder "Introduction"
-                ]
-
-            WikiPostings ->
-                [ goHome
-                , placeholder "Wiki Postings"
-                ]
-
-            UsefulResources ->
-                [ goHome
-                , placeholder "Useful Resources"
-                ]
+        [ GameOfLife.viewGameOfLife model.gameOfLife
+        ]
     }
 
 
-goHome : Html Msg
-goHome =
-    div [ class "nav-item" ]
-        [ button [ onClick (GotoRoute "/"), style "margin" "12px 12px" ]
-            [ div [ style "font-size" "20px" ]
-                [ material "home"
-                , span [] [ text "Home" ]
-                ]
-            ]
+type PageState
+    = Home
+
+
+routeParser : Parser (PageState -> a) a
+routeParser =
+    oneOf
+        [ map Home (s "")
         ]
 
 
-placeholder : String -> Html Msg
-placeholder name =
-    div
-        [ style "color" "white"
-        , style "font-size" "xx-large"
-        ]
-        [ text (name ++ " currently in progress") ]
-
-
-navItem : String -> String -> Html Msg
-navItem friendlyName link =
-    div [ class "nav-item" ]
-        [ button [ onClick (GotoRoute link) ]
-            [ div []
-                [ text friendlyName
-                ]
-            ]
-        ]
-
-
-material : String -> Html Msg
-material name =
-    span [ class "material-icons" ] [ text name ]
+resolveUrl : Url -> PageState
+resolveUrl url =
+    Url.Parser.parse routeParser url
+        |> Maybe.withDefault Home
