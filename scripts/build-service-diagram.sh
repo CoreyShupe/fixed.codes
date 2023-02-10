@@ -8,7 +8,7 @@
 # There's also a very concrete build order here; the services
 # are built first as "dependencies" to the micro-services; one
 # example is the RUST_WORKSPACE service which is a dependency to
-# rust and elm projects. This workspace builds a bare docker
+# rust and elm resources. This workspace builds a bare docker
 # container with the cargo workspaces' collected dependencies compiled.
 
 SERVICE_OUTPUT="[]"

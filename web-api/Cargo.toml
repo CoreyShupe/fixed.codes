@@ -6,9 +6,19 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+drax = { git = "https://github.com/ScrapyardRs/Drax", branch = "develop" }
+
 web_commons = { path = "../web_commons" }
 
 # workspace dependencies
 anyhow.workspace = true
 log.workspace = true
 actix-web = "4.2.1"
+serde.workspace = true
+serde_derive.workspace = true
+tokio = { version = "1.25.0", features = ["io-std", "net", "io-util"] }
+
+[dependencies.mcprotocol]
+git = "https://github.com/ScrapyardRs/MCProtocol.rs"
+default-features = false
+branch = "develop"
