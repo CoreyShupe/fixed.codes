@@ -26,15 +26,17 @@ boxed attrs children =
 navItem :
     List (Attribute msg)
     -> List (Html msg)
+    -> List (Html msg)
     -> String
     -> (NavMsg -> msg)
     -> Html msg
-navItem attrs inner link messageMapper =
+navItem attrs heading description link messageMapper =
     div
         (List.concat
             [ [ class "nav-item" ], attrs ]
         )
-        [ button [ onClick (messageMapper (GotoRoute link)) ] [ div [] inner ]
+        [ button [ onClick (messageMapper (GotoRoute link)) ]
+            [ div [ class "heading" ] heading, div [ class "description" ] description ]
         ]
 
 

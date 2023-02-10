@@ -12,3 +12,67 @@ html, body, .base-wrapper {
 body {
     background-color: #222222;
 }
+
+.nav-box {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-item button {
+    position: relative;
+    border: 12px solid transparent;
+    border-radius: 24px;
+    background-clip: padding-box;
+    background-color: #f2f2f2;
+    padding: 8px 16px;
+}
+
+.nav-item button:hover::after {
+    background: linear-gradient(145deg, rgba(55, 29, 172, 1) 0%, rgba(45, 144, 87, 1) 46%, rgba(179, 66, 66, 1) 86%);
+}
+
+.nav-item button:hover {
+    background-image: linear-gradient(145deg, rgba(179, 66, 66, .7) 0%, rgba(45, 144, 87, .4) 46%, rgba(55, 29, 172, .7) 86%);
+}
+
+.nav-item button:not(:hover)::after {
+    background: linear-gradient(145deg, rgba(55, 29, 172, 1) 0%, rgba(179, 66, 66, 1) 100%);
+}
+
+.nav-item button::after {
+    z-index: -1;
+    position: absolute;
+    top: -12px;
+    bottom: -12px;
+    left: -12px;
+    right: -12px;
+    content: '';
+    border-radius: 24px;
+}
+
+.nav-item button .heading {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.nav-item button .heading {
+    font-family: "genbkbasb", "ui-serif", monospace;
+    line-height: 100%;
+    font-weight: bolder;
+    font-size: 56px;
+    margin-bottom: 10px;
+    color: #222222;
+}
+
+.nav-item button .description {
+    font-family: "ui-serif", monospace;
+    line-height: 100%;
+    font-weight: bolder;
+    font-size: 24px;
+    color: #222222;
+    inline-size: 400px;
+    overflow-wrap: break-word;
+}

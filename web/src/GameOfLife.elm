@@ -2,9 +2,10 @@ module GameOfLife exposing (..)
 
 import Canvas exposing (..)
 import Canvas.Settings exposing (fill)
-import Color
+import Color exposing (Color)
 import Dict exposing (Dict)
 import Html exposing (Html)
+import Html.Attributes exposing (id, style)
 import List
 import Random
 
@@ -12,6 +13,16 @@ import Random
 pixelsPerSquare : Float
 pixelsPerSquare =
     8
+
+
+placementChance : Float
+placementChance =
+    0.12
+
+
+cellColor : Color
+cellColor =
+    Color.rgba 234 234 234 1
 
 
 type alias GameOfLife =
@@ -54,6 +65,15 @@ insert pageX pageY model =
 
     else
         model
+
+
+initRandom : Int -> Int -> (GameOfLifeMsg -> msg) -> ( GameOfLife, Cmd msg )
+initRandom width height mapper =
+    let
+        newModel =
+            init width height
+    in
+    randomFill newModel mapper
 
 
 init : Int -> Int -> GameOfLife
@@ -113,7 +133,7 @@ update model msg =
 
                     chosen =
                         List.filter
-                            (\( _, x ) -> x < 0.12)
+                            (\( _, x ) -> x < placementChance)
                             firstMap
 
                     mapped =
@@ -133,16 +153,15 @@ update model msg =
 
 viewGameOfLife : GameOfLife -> Html msg
 viewGameOfLife model =
-    Canvas.toHtml
-        ( model.width, model.height )
-        []
-        [ clear ( 0, 0 )
-            (toFloat model.width)
-            (toFloat model.height)
-        , shapes
-            [ fill (Color.rgba 234 234 234 255)
-            ]
-            (buildTileShapes model.populatedCells)
+    Canvas.toHtml ( model.width, model.height )
+        [ id "game_of_life"
+        , style "position" "absolute"
+        , style "top" "0"
+        , style "left" "0"
+        , style "z-index" "-2"
+        ]
+        [ clear ( 0, 0 ) (toFloat model.width) (toFloat model.height)
+        , shapes [ fill cellColor ] (buildTileShapes model.populatedCells)
         ]
 
 
