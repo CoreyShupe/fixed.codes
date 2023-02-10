@@ -68,7 +68,10 @@ update msg model =
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Nav.pushUrl model.key (Url.toString url) )
+                    ( model
+                    , Nav.pushUrl model.key
+                        (Url.toString url)
+                    )
 
                 Browser.External href ->
                     ( model, Nav.load href )
@@ -92,14 +95,19 @@ update msg model =
 
         Tick ->
             ( { model
-                | gameOfLife = GameOfLife.calculateNextGeneration model.gameOfLife
+                | gameOfLife =
+                    GameOfLife.calculateNextGeneration
+                        model.gameOfLife
               }
             , Cmd.none
             )
 
         GOL message ->
             ( { model
-                | gameOfLife = GameOfLife.update model.gameOfLife message
+                | gameOfLife =
+                    GameOfLife.update
+                        model.gameOfLife
+                        message
               }
             , Cmd.none
             )
@@ -117,7 +125,11 @@ update msg model =
 
         GenericClick clickEvent ->
             ( { model
-                | gameOfLife = GameOfLife.insert clickEvent.pageX clickEvent.pageY model.gameOfLife
+                | gameOfLife =
+                    GameOfLife.insert
+                        clickEvent.pageX
+                        clickEvent.pageY
+                        model.gameOfLife
               }
             , Cmd.none
             )

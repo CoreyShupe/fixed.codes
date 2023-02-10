@@ -18,6 +18,8 @@ type alias GameOfLife =
     { populatedCells : List ( Int, Int )
     , height : Int
     , width : Int
+    , cellHeight : Int
+    , cellWidth : Int
     }
 
 
@@ -44,20 +46,14 @@ insert pageX pageY model =
             model
 
         else
-            { model | populatedCells = ( cellX, cellY ) :: model.populatedCells }
+            { model
+                | populatedCells =
+                    ( cellX, cellY )
+                        :: model.populatedCells
+            }
 
     else
         model
-
-
-cellWidth : GameOfLife -> Int
-cellWidth gol =
-    round (toFloat gol.width / pixelsPerSquare)
-
-
-cellHeight : GameOfLife -> Int
-cellHeight gol =
-    round (toFloat gol.height / pixelsPerSquare)
 
 
 init : Int -> Int -> GameOfLife
@@ -65,6 +61,18 @@ init width height =
     { populatedCells = []
     , height = bind height - round pixelsPerSquare
     , width = bind width
+    , cellHeight =
+        round
+            (toFloat
+                (bind height - round pixelsPerSquare)
+                / pixelsPerSquare
+            )
+    , cellWidth =
+        round
+            (toFloat
+                (bind width)
+                / pixelsPerSquare
+            )
     }
 
 
@@ -83,7 +91,7 @@ randomFill model mapper =
     , Random.generate
         (mapper << RandomFill)
         (Random.list
-            (cellWidth model * cellHeight model)
+            (model.cellWidth * model.cellHeight)
             (Random.float 0 1)
         )
     )
@@ -99,17 +107,23 @@ update model msg =
             RandomFill randoms ->
                 let
                     firstMap =
-                        List.indexedMap (\idx v -> ( idx, v )) randoms
+                        List.indexedMap
+                            (\idx v -> ( idx, v ))
+                            randoms
 
                     chosen =
-                        List.filter (\( _, x ) -> x < 0.12) firstMap
+                        List.filter
+                            (\( _, x ) -> x < 0.12)
+                            firstMap
 
                     mapped =
                         List.map
                             (\( idx, _ ) ->
-                                ( modBy (cellWidth model) idx
+                                ( modBy model.cellWidth idx
                                 , floor
-                                    (toFloat idx / toFloat (cellWidth model))
+                                    (toFloat idx
+                                        / toFloat model.cellWidth
+                                    )
                                 )
                             )
                             chosen
@@ -122,7 +136,9 @@ viewGameOfLife model =
     Canvas.toHtml
         ( model.width, model.height )
         []
-        [ clear ( 0, 0 ) (toFloat model.width) (toFloat model.height)
+        [ clear ( 0, 0 )
+            (toFloat model.width)
+            (toFloat model.height)
         , shapes
             [ fill (Color.rgba 234 234 234 255)
             ]
@@ -135,7 +151,9 @@ buildTileShapes cells =
     List.map
         (\( x, y ) ->
             rect
-                ( toFloat x * pixelsPerSquare, toFloat y * pixelsPerSquare )
+                ( toFloat x * pixelsPerSquare
+                , toFloat y * pixelsPerSquare
+                )
                 pixelsPerSquare
                 pixelsPerSquare
         )
@@ -145,15 +163,16 @@ buildTileShapes cells =
 calculateNextGeneration : GameOfLife -> GameOfLife
 calculateNextGeneration model =
     let
-        neighborDict =
-            calculateGenerationalNeighbors model.width model.height model.populatedCells
-
         nextGeneration =
             Dict.foldl
                 (\( x, y ) state acc ->
                     case state of
                         Seen 2 ->
-                            if List.member ( x, y ) model.populatedCells then
+                            if
+                                List.member
+                                    ( x, y )
+                                    model.populatedCells
+                            then
                                 ( x, y ) :: acc
 
                             else
@@ -169,7 +188,11 @@ calculateNextGeneration model =
                             acc
                 )
                 []
-                neighborDict
+                (calculateGenerationalNeighbors
+                    model.width
+                    model.height
+                    model.populatedCells
+                )
     in
     { model | populatedCells = nextGeneration }
 
@@ -186,7 +209,13 @@ calculateGenerationalNeighbors :
     -> Dict ( Int, Int ) CellState
 calculateGenerationalNeighbors width height cells =
     List.foldr
-        (\cell acc -> processNeighborDictionary cell width height acc)
+        (\cell acc ->
+            processNeighborDictionary
+                cell
+                width
+                height
+                acc
+        )
         Dict.empty
         cells
 
