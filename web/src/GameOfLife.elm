@@ -23,18 +23,31 @@ type alias GameOfLife =
 
 insert : Int -> Int -> GameOfLife -> GameOfLife
 insert pageX pageY model =
-    let
-        cellX =
-            floor (toFloat pageX / pixelsPerSquare)
+    if
+        pageX
+            >= 0
+            && pageY
+            >= 0
+            && pageY
+            < model.height
+            && pageX
+            < model.width
+    then
+        let
+            cellX =
+                floor (toFloat pageX / pixelsPerSquare)
 
-        cellY =
-            floor (toFloat pageY / pixelsPerSquare)
-    in
-    if List.member ( pageX, pageY ) model.populatedCells then
-        model
+            cellY =
+                floor (toFloat pageY / pixelsPerSquare)
+        in
+        if List.member ( pageX, pageY ) model.populatedCells then
+            model
+
+        else
+            { model | populatedCells = ( cellX, cellY ) :: model.populatedCells }
 
     else
-        { model | populatedCells = ( cellX, cellY ) :: model.populatedCells }
+        model
 
 
 cellWidth : GameOfLife -> Int
