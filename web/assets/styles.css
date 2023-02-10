@@ -18,10 +18,11 @@ body {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 
 .nav-item button {
+    cursor: pointer;
     position: relative;
     border: 12px solid transparent;
     border-radius: 24px;
