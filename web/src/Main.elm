@@ -58,11 +58,7 @@ update :
     -> Model
     -> ( Model, Cmd Msg )
 update msg model =
-    let
-        msg2 =
-            Debug.log "Incoming message!" msg
-    in
-    case msg2 of
+    case msg of
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->

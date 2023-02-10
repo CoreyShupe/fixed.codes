@@ -97,7 +97,7 @@ viewGameOfLife model =
         , shapes
             [ fill (Color.rgba 234 234 234 255)
             ]
-            (Debug.log "Shapes!" (buildTileShapes model.populatedCells))
+            (buildTileShapes model.populatedCells)
         ]
 
 
