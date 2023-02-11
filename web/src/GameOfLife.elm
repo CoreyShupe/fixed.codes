@@ -2,14 +2,12 @@ module GameOfLife exposing (..)
 
 import Canvas exposing (..)
 import Canvas.Settings exposing (fill)
-import Canvas.Settings.Text
 import Color exposing (Color)
 import Dict exposing (Dict)
 import Html exposing (Html)
 import Html.Attributes exposing (id, style)
 import List
 import Random
-import String exposing (fromInt)
 
 
 pixelsPerSquare : Float
@@ -166,14 +164,6 @@ view model =
         ]
         [ clear ( 0, 0 ) (toFloat model.width) (toFloat model.height)
         , shapes [ fill cellColor ] (buildTileShapes model.populatedCells)
-        , text
-            [ Canvas.Settings.stroke cellColor, Canvas.Settings.Text.font { size = 18, family = "monospace" } ]
-            ( 10, 40 )
-            ("Generation: " ++ fromInt model.generation)
-        , text
-            [ Canvas.Settings.stroke cellColor, Canvas.Settings.Text.font { size = 18, family = "monospace" } ]
-            ( 10, 60 )
-            ("Population: " ++ fromInt (List.length model.populatedCells))
         ]
 
 
@@ -188,10 +178,7 @@ buildTileShapes cells =
                 pixelsPerSquare
                 pixelsPerSquare
         )
-        (List.filter
-            (\( x, y ) -> (x > 23 && y < 9) || y >= 9)
-            cells
-        )
+        cells
 
 
 calculateNextGeneration : GameOfLife -> GameOfLife

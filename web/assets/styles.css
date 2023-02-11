@@ -48,6 +48,7 @@ body {
     right: -12px;
     content: '';
     border-radius: 24px;
+    box-shadow: #f2f2f2;
 }
 
 .nav-item button .heading {

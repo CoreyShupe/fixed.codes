@@ -5,8 +5,8 @@ import Browser.Dom exposing (Viewport, getViewport)
 import Browser.Events
 import Browser.Navigation as Nav exposing (Key)
 import GameOfLife exposing (GameOfLife, randomFill)
-import Html exposing (br, div, p, text)
-import Html.Attributes exposing (style)
+import Html exposing (a, i, text)
+import Html.Attributes exposing (class, href, style)
 import Json.Decode as Decode
 import Platform.Sub exposing (batch)
 import SystemRouter exposing (..)
@@ -135,7 +135,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     batch
         [ Browser.Events.onResize WidthHeight
-        , Time.every 665 (\_ -> Tick)
+        , Time.every 150 (\_ -> Tick)
         , Browser.Events.onClick
             (Decode.map
                 GenericClick
@@ -201,6 +201,26 @@ view model =
                         "/"
                         Navigation
                     ]
+        , i
+            [ class "fa-solid fa-square-github"
+            , style "position" "absolute"
+            , style "top" "-26px"
+            , style "left" "3px"
+            , style "cursor" "pointer"
+            , style "font-size" "100px"
+            , style "overflow" "hidden"
+            , style "max-height" "78px"
+            ]
+            [ a
+                [ href "https://github.com/CoreyShupe/fixed.codes"
+                , style "width" "50px"
+                , style "height" "78px"
+                , style "position" "absolute"
+                , style "top" "0px"
+                , style "left" "0px"
+                ]
+                []
+            ]
         ]
     }
 

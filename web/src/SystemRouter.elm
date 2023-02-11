@@ -53,18 +53,3 @@ home attrs mapper =
                 ]
             ]
         ]
-
-
-back : List (Attribute msg) -> (NavMsg -> msg) -> String -> Html msg
-back attrs mapper to =
-    div
-        (List.concat
-            [ [ class "nav-item" ], attrs ]
-        )
-        [ button [ onClick (mapper (GotoRoute to)), style "margin" "12px 12px" ]
-            [ div [ style "font-size" "20px" ]
-                [ span [ class "material-icons" ] [ text "navigate_before" ]
-                , span [] [ text "Go Back" ]
-                ]
-            ]
-        ]
